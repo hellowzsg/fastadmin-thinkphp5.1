@@ -5,7 +5,7 @@ namespace app\admin\controller\auth;
 use app\admin\model\AuthRule;
 use app\common\controller\Backend;
 use fast\Tree;
-use think\Cache;
+use think\facade\Cache;
 
 /**
  * 规则管理
