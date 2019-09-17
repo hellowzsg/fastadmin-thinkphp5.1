@@ -3,10 +3,10 @@
 namespace app\index\controller;
 
 use app\common\controller\Frontend;
-use think\Config;
-use think\Cookie;
-use think\Hook;
-use think\Validate;
+use think\facade\Config;
+use think\facade\Cookie;
+use think\facade\Hook;
+use think\facade\Validate;
 
 /**
  * 会员中心
