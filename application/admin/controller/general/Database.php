@@ -5,7 +5,7 @@ namespace app\admin\controller\general;
 use addons\database\library\Backup;
 use app\common\controller\Backend;
 use think\Db;
-use think\Debug;
+use think\facade\Debug;
 use think\Exception;
 use think\exception\PDOException;
 use ZipArchive;
