@@ -4,7 +4,7 @@ namespace app\admin\controller\wechat;
 
 use app\common\controller\Backend;
 use think\Controller;
-use think\Request;
+use think\facade\Request;
 
 /**
  * 微信配置管理
