@@ -2,7 +2,7 @@
 
 namespace app\admin\validate;
 
-use think\Validate;
+use think\facade\Validate;
 
 class UserRule extends Validate
 {
