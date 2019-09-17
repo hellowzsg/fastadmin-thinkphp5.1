@@ -1,9 +1,11 @@
-FastAdmin 升级 thinkphp5.1
+**FastAdmin 升级 thinkphp5.1**
 
 
 ## **项目进度**
 2019-09-17  导入项目
-
+## **参考项目**
+fastadmin  https://gitee.com/karson/fastadmin.git  
+cygmris/think2h4ck  https://github.com/cygmris/think2h4ck.git
 ## **安装使用**
 ### **环境要求**
 ```
@@ -30,23 +32,7 @@ Less (可选,用于编辑less文件,如果你需要增改css样式,最好安装�
 4. 添加虚拟主机并绑定到fastadmin/public目录
 5. 访问主机在线安装
 
-## **特别鸣谢**
 
-感谢以下的项目,排名不分先后
-
-ThinkPHP：http://www.thinkphp.cn
-
-AdminLTE：https://adminlte.io
-
-Bootstrap：http://getbootstrap.com
-
-jQuery：http://jquery.com
-
-Bootstrap-table：https://github.com/wenzhixin/bootstrap-table
-
-Nice-validator: https://validator.niceue.com
-
-SelectPage: https://github.com/TerryZ/SelectPage
 
 ## **版权信息**
 
