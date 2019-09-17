@@ -6,7 +6,7 @@ use app\common\controller\Api;
 use app\common\model\Area;
 use app\common\model\Version;
 use fast\Random;
-use think\Config;
+use think\facade\Config;
 
 /**
  * 公共接口
