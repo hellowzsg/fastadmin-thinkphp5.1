@@ -6,7 +6,7 @@ use app\admin\model\AuthRule;
 use ReflectionClass;
 use ReflectionMethod;
 use think\Cache;
-use think\Config;
+use think\facade\Config;
 use think\console\Command;
 use think\console\Input;
 use think\console\input\Option;
