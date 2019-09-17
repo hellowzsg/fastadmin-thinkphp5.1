@@ -4,7 +4,7 @@ namespace app\admin\command;
 
 use think\addons\AddonException;
 use think\addons\Service;
-use think\Config;
+use think\facade\Config;
 use think\console\Command;
 use think\console\Input;
 use think\console\input\Option;
