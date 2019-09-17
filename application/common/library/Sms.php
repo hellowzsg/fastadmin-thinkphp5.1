@@ -2,7 +2,7 @@
 
 namespace app\common\library;
 
-use think\Hook;
+use think\facade\Hook;
 
 /**
  * 短信验证码类
