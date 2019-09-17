@@ -11,7 +11,7 @@ use think\console\Output;
 use think\Db;
 use think\Exception;
 use think\exception\ErrorException;
-use think\Lang;
+use think\facade\Lang;
 use think\Loader;
 
 class Crud extends Command
