@@ -2,7 +2,7 @@
 
 namespace app\common\library;
 
-use think\Config;
+use think\facade\Config;
 
 class Email
 {
