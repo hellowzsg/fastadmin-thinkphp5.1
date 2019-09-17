@@ -3,9 +3,9 @@
 namespace app\common\library;
 
 use app\common\library\token\Driver;
-use think\App;
-use think\Config;
-use think\Log;
+use think\facade\App;
+use think\facade\Config;
+use think\facade\Log;
 
 /**
  * Token操作类
