@@ -3,14 +3,14 @@
 namespace app\common\controller;
 
 use app\common\library\Auth;
-use think\Config;
+use think\facade\Config;
 use think\exception\HttpResponseException;
 use think\exception\ValidateException;
-use think\Hook;
-use think\Lang;
+use think\facade\Hook;
+use think\facade\Lang;
 use think\Loader;
-use think\Request;
-use think\Response;
+use think\facade\Request;
+use think\facade\Response;
 
 /**
  * API控制器基类
