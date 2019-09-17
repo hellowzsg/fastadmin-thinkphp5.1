@@ -1,0 +1,18 @@
+version: '3.1'
+services:
+  fastadmin-web:
+    image: cygmris/ohuofd_web
+    container_name: fastadmin-web
+    restart: always
+    ports:
+      - 8090:80
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ../:/var/www
+    environment:
+      - SKIP_COMPOSER=1
+      - SKIP_CHOWN=1
+      - PUID=1000
+      - PGID=1000
+
