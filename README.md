@@ -1,8 +1,6 @@
 **FastAdmin 完全升级 thinkphp5.1**
 
 
-## **项目进度**
-2019-09-17  导入项目
 ## **参考项目**
 fastadmin  https://gitee.com/karson/fastadmin.git  
 cygmris/think2h4ck  https://github.com/cygmris/think2h4ck.git
