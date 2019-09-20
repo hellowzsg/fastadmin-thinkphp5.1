@@ -43,7 +43,8 @@ class Token
                 $type;
 
             // 记录初始化信息
-            App::$debug && Log::record('[ TOKEN ] INIT ' . $type, 'info');
+            //App::$debug && Log::record('[ TOKEN ] INIT ' . $type, 'info');
+            \think\facade\Env::get('app_debug', Config::get('app.app_debug')) && Log::record('[ TOKEN ] INIT ' . $type, 'info');
 
             if (true === $name) {
                 return new $class($options);
