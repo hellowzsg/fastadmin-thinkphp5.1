@@ -10,6 +10,7 @@ use think\facade\Hook;
 use think\facade\Lang;
 use think\Loader;
 use think\facade\Request;
+use think\Request as R;
 use think\facade\Response;
 
 /**
@@ -67,9 +68,10 @@ class Api
      * @access public
      * @param Request $request Request 对象
      */
-    public function __construct(Request $request = null)
+    public function __construct(R $request = null)
     {
         $this->request = is_null($request) ? Request::instance() : $request;
+//        $this->request = is_null($request) ? new R(): $request;
 
         // 控制器初始化
         $this->initialize();
@@ -90,17 +92,22 @@ class Api
      */
     protected function initialize()
     {
-        //移除HTML标签
-        $this->request->filter('trim,strip_tags,htmlspecialchars');
+        //移除HTML标签todo
+//        $this->request->filtfilter('trim,strip_tags,htmlspecialchars');
+        Request::filter(['trim','strip_tags','htmlspecialchars']);
 
         $this->auth = Auth::instance();
 
-        $modulename = $this->request->module();
-        $controllername = strtolower($this->request->controller());
-        $actionname = strtolower($this->request->action());
+//        $modulename = $this->request->module();
+        $modulename = Request::module();
+//        $controllername = strtolower($this->request->controller());
+        $controllername = strtolower(Request::controller());
+//        $actionname = strtolower($this->request->action());
+        $actionname = strtolower(Request::action());
 
         // token
-        $token = $this->request->server('HTTP_TOKEN', $this->request->request('token', \think\Cookie::get('token')));
+//        $token = $this->request->server('HTTP_TOKEN', $this->request->request('token', \think\Cookie::get('token')));
+        $token = Request::server('HTTP_TOKEN', Request::request('token', \think\facade\Cookie::get('token')));
 
         $path = str_replace('.', '/', $controllername) . '/' . $actionname;
         // 设置当前请求的URI
@@ -132,7 +139,10 @@ class Api
         // 上传信息配置后
         Hook::listen("upload_config_init", $upload);
 
-        Config::set('upload', array_merge(Config::get('upload'), $upload));
+//        Config::set('upload', array_merge(Config::get('upload'), $upload));
+        $upload_conf = Config::get('upload');
+        $upload_conf = is_array($upload_conf)? $upload_conf: [];
+        Config::set('upload', array_merge($upload_conf, $upload));
 
         // 加载当前控制器语言包
         $this->loadlang($controllername);
@@ -144,7 +154,7 @@ class Api
      */
     protected function loadlang($name)
     {
-        Lang::load(APP_PATH . $this->request->module() . '/lang/' . $this->request->langset() . '/' . str_replace('.', '/', $name) . '.php');
+        Lang::load(APP_PATH . Request::module() . '/lang/' . Request::langset() . '/' . str_replace('.', '/', $name) . '.php');
     }
 
     /**
@@ -193,7 +203,7 @@ class Api
             'data' => $data,
         ];
         // 如果未设置类型则自动判断
-        $type = $type ? $type : ($this->request->param(config('var_jsonp_handler')) ? 'jsonp' : $this->responseType);
+        $type = $type ? $type : (Request::param(config('var_jsonp_handler')) ? 'jsonp' : $this->responseType);
 
         if (isset($header['statuscode'])) {
             $code = $header['statuscode'];
