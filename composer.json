@@ -22,7 +22,7 @@
     "topthink/think-captcha": "^2.0",
     "mtdowling/cron-expression": "^1.2",
     "phpmailer/phpmailer": "^5.2",
-    "cygmris/think2h4ck-addons": "~1.2.1",
+    "zhusg/thinkphp51-addons": "dev-master",
     "overtrue/pinyin": "~3.0",
     "phpoffice/phpspreadsheet": "^1.2"
   },
