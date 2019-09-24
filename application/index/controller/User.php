@@ -112,10 +112,12 @@ class User extends Frontend
                 'captcha' => $captcha,
                 '__token__' => $token,
             ];
-            $validate = new Validate($rule, $msg);
-            $result = $validate->check($data);
+//            $validate = new Validate($rule, $msg);
+//            $result = $validate->check($data);
+            $result = Validate::check($data);
             if (!$result) {
-                $this->error(__($validate->getError()), null, ['token' => $this->request->token()]);
+//                $this->error(__($validate->getError()), null, ['token' => $this->request->token()]);
+                $this->error(__(Validate::getError()), null, ['token' => $this->request->token()]);
             }
             if ($this->auth->register($username, $password, $email, $mobile)) {
                 $this->success(__('Sign up successful'), $url ? $url : url('user/index'));
@@ -165,10 +167,12 @@ class User extends Frontend
                 'password' => $password,
                 '__token__' => $token,
             ];
-            $validate = new Validate($rule, $msg);
-            $result = $validate->check($data);
+//            $validate = new Validate($rule, $msg);
+//            $result = $validate->check($data);
+            $result = Validate::check($data);
             if (!$result) {
-                $this->error(__($validate->getError()), null, ['token' => $this->request->token()]);
+//                $this->error(__($validate->getError()), null, ['token' => $this->request->token()]);
+                $this->error(__(Validate::getError()), null, ['token' => $this->request->token()]);
                 return false;
             }
             if ($this->auth->login($account, $password)) {
