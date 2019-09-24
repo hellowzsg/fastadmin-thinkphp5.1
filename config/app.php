@@ -16,18 +16,24 @@
 return [
     // 应用名称
     'app_name' => '',
+    // 应用命名空间
+    'app_namespace'          => 'app',
     // 应用地址
     'app_host' => '',
     // 应用调试模式
-    'app_debug' => true,
+    'app_debug' => Env::get('app.debug', false),
     // 应用Trace
-    'app_trace' => true,
+    'app_trace' => Env::get('app.trace', false),
+    // 应用模式状态
+    'app_status'             => '',
     // 是否支持多模块
     'app_multi_module' => true,
     // 入口自动绑定模块
     'auto_bind_module' => false,
     // 注册的根命名空间
     'root_namespace' => [],
+    // 扩展函数文件
+    'extra_file_list'        => [Env::get('think_path') . 'helper.php'],
     // 默认输出类型
     'default_return_type' => 'html',
     // 默认AJAX 数据返回格式,可选json xml ...
@@ -94,6 +100,8 @@ return [
     'url_common_param' => false,
     // URL参数方式 0 按名称成对解析 1 按顺序解析
     'url_param_type' => 0,
+    // 是否开启路由
+    'url_route_on'           => true,
     // 是否开启路由延迟解析
     'url_lazy_route' => false,
     // 是否强制使用路由
@@ -102,6 +110,8 @@ return [
     'route_rule_merge' => false,
     // 路由是否完全匹配
     'route_complete_match' => false,
+    // 路由配置文件（支持配置多个）
+    'route_config_file'      => ['route'],
     // 使用注解路由
     'route_annotation' => false,
     // 域名根，如thinkphp.cn
@@ -130,18 +140,53 @@ return [
     'route_cache_option' => [],
 
     // 默认跳转页面对应的模板文件
-    'dispatch_success_tmpl' => Env::get('think_path') . 'tpl/dispatch_jump.tpl',
-    'dispatch_error_tmpl' => Env::get('think_path') . 'tpl/dispatch_jump.tpl',
-
+//    'dispatch_success_tmpl' => Env::get('think_path') . 'tpl/dispatch_jump.tpl',
+    'dispatch_success_tmpl' => APP_PATH . 'common' . DS . 'view' . DS . 'tpl' . DS . 'dispatch_jump.tpl',
+//    'dispatch_error_tmpl' => Env::get('think_path') . 'tpl/dispatch_jump.tpl',
+    'dispatch_error_tmpl' => APP_PATH . 'common' . DS . 'view' . DS . 'tpl' . DS . 'dispatch_jump.tpl',
+    // +----------------------------------------------------------------------
+    // | 异常及错误设置
+    // +----------------------------------------------------------------------
     // 异常页面的模板文件
-    'exception_tmpl' => Env::get('think_path') . 'tpl/think_exception.tpl',
-
+//    'exception_tmpl' => Env::get('think_path') . 'tpl/think_exception.tpl',
+    'exception_tmpl' => APP_PATH . 'common' . DS . 'view' . DS . 'tpl' . DS . 'think_exception.tpl',
     // 错误显示信息,非调试模式有效
-    'error_message' => '页面错误！请稍后再试～',
+    'error_message' => '你所浏览的页面暂时无法访问',
     // 显示错误信息
     'show_error_msg' => false,
     // 异常处理handle类 留空使用 \think\exception\Handle
     'exception_handle' => '',
     // 自动搜索控制器
     'controller_auto_search' => true,
+    // +----------------------------------------------------------------------
+    // | 分页配置
+    // +----------------------------------------------------------------------
+    'paginate'               => [
+        'type'      => 'bootstrap',
+        'var_page'  => 'page',
+        'list_rows' => 15,
+    ],
+    // +----------------------------------------------------------------------
+    // | FastAdmin配置
+    // +----------------------------------------------------------------------
+    'fastadmin'              => [
+        //是否开启前台会员中心
+        'usercenter'          => true,
+        //登录验证码
+        'login_captcha'       => true,
+        //登录失败超过10次则1天后重试
+        'login_failure_retry' => true,
+        //是否同一账号同一时间只能在一个地方登录
+        'login_unique'        => false,
+        //登录页默认背景图
+        'login_background'    => "/assets/img/loginbg.jpg",
+        //是否启用多级菜单导航
+        'multiplenav'         => false,
+        //自动检测更新
+        'checkupdate'         => false,
+        //版本号
+        'version'             => '1.0.0.20190510_beta',
+        //API接口地址
+        'api_url'             => 'https://api.fastadmin.net',
+    ],
 ];

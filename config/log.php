@@ -14,12 +14,12 @@
 // +----------------------------------------------------------------------
 return [
     // 日志记录方式，内置 file socket 支持扩展
-//    'type'        => 'File',
-    'type'        => 'socket',
+    'type'        => 'File',
+//    'type'        => 'socket',
 
     'host'        => '172.21.0.1',
     // 日志保存目录
-    'path'        => '',
+    'path'        => Env::get('runtime_path') . 'log/',
 
     'force_client_ids'    => ['test'],
     //限制允许读取日志的client_id
