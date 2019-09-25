@@ -1,9 +1,6 @@
 **FastAdmin 完全升级 thinkphp5.1**
 
 
-## **参考项目**
-fastadmin  https://gitee.com/karson/fastadmin.git  
-cygmris/think2h4ck  https://github.com/cygmris/think2h4ck.git
 ## **安装使用**
 ### **环境要求**
 ```
@@ -32,7 +29,11 @@ Less (可选,用于编辑less文件,如果你需要增改css样式,最好安装�
 
 ## **注意事项**
 1. 不可使用fastadmin官方插件(2019.09.17 fastadmin 基于ThinkPHP5.0)
-
+## **项目地址**
+githup https://github.com/hellowzsg/fastadmin-thinkphp5.1.git
+## **参考项目**
+fastadmin  https://gitee.com/karson/fastadmin.git  
+cygmris/think2h4ck  https://github.com/cygmris/think2h4ck.git
 ## **版权信息**
 
 FastAdmin 遵循 Apache2 开源协议发布，并提供免费使用。
