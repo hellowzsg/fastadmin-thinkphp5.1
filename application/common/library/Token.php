@@ -31,7 +31,7 @@ class Token
      */
     public static function connect(array $options = [], $name = false)
     {
-        $type = !empty($options['type']) ? $options['type'] : 'File';
+        $type = !empty($options['type']) ? $options['type'] : 'Mysql';
 
         if (false === $name) {
             $name = md5(serialize($options));
@@ -43,8 +43,8 @@ class Token
                 $type;
 
             // 记录初始化信息
-            //App::$debug && Log::record('[ TOKEN ] INIT ' . $type, 'info');
-            \think\facade\Env::get('app_debug', Config::get('app.app_debug')) && Log::record('[ TOKEN ] INIT ' . $type, 'info');
+//            App::$debug && Log::record('[ TOKEN ] INIT ' . $type, 'info');
+            App::isDebug() && Log::record('[ TOKEN ] INIT ' . $type, 'info');
 
             if (true === $name) {
                 return new $class($options);
@@ -72,6 +72,7 @@ class Token
             } elseif (empty($options)) {
                 $options = Config::get('token');
             }
+            $options = is_array($options)? $options: [];
 
             self::$handler = self::connect($options);
         }

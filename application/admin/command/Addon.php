@@ -59,6 +59,7 @@ class Addon extends Command
         Db::execute("SELECT 1");
 
         $addonDir = ADDON_PATH . $name . DS;
+
         switch ($action) {
             case 'create':
                 //非覆盖模式时如果存在则报错
