@@ -42,7 +42,7 @@ class UserRule extends Model
 
     public static function getTreeList($selected = [])
     {
-        $ruleList = collection(self::where('status', 'normal')->order('weigh desc,id desc')->select())->toArray();
+        $ruleList = self::where('status', 'normal')->order('weigh desc,id desc')->select()->toArray();
         $nodeList = [];
         Tree::instance()->init($ruleList);
         $ruleList = Tree::instance()->getTreeList(Tree::instance()->getTreeArray(0), 'name');
