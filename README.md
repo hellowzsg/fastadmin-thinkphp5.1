@@ -35,11 +35,3 @@ githup https://github.com/hellowzsg/fastadmin-thinkphp5.1.git
 fastadmin  https://gitee.com/karson/fastadmin.git  
 cygmris/think2h4ck  https://github.com/cygmris/think2h4ck.git
 ## **版权信息**
-
-FastAdmin 遵循 Apache2 开源协议发布，并提供免费使用。
-
-本项目包含的第三方源码和二进制文件之版权信息另行标注。
-
-版权所有 Copyright © 2017-2019 by FastAdmin (https://www.fastadmin.net)
-
-All rights reserved。
