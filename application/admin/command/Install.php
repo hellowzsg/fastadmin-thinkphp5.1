@@ -8,7 +8,6 @@ use think\console\Command;
 use think\console\Input;
 use think\console\input\Option;
 use think\console\Output;
-use think\Db;
 use think\Exception;
 
 class Install extends Command
@@ -17,7 +16,7 @@ class Install extends Command
 
     protected function configure()
     {
-        $config = Config::get('database');
+        $config = Config::pull('database');
         $this
             ->setName('install')
             ->addOption('hostname', 'a', Option::VALUE_OPTIONAL, 'mysql hostname', $config['hostname'])
@@ -51,30 +50,26 @@ class Install extends Command
         $sql = str_replace("`fa_", "`{$prefix}", $sql);
 
         // 先尝试能否自动创建数据库
-        $config = Config::get('database');
-        $pdo = new PDO("{$config['type']}:host={$hostname}" . ($hostport ? ";port={$hostport}" : ''), $username, $password);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $pdo->query("CREATE DATABASE IF NOT EXISTS `{$database}` CHARACTER SET utf8 COLLATE utf8_general_ci;");
-
-        // 连接install命令中指定的数据库
-        $instance = Db::connect([
-            'type' => "{$config['type']}",
-            'hostname' => "{$hostname}",
-            'hostport' => "{$hostport}",
-            'database' => "{$database}",
-            'username' => "{$username}",
-            'password' => "{$password}",
+        $config = Config::pull('database');
+        $pdo = new PDO("{$config['type']}:host={$hostname}" . ($hostport ? ";port={$hostport}" : ''), $username, $password,[
+            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"
         ]);
-
-        // 查询一次SQL,判断连接是否正常
-        $instance->execute("SELECT 1");
-
-        // 调用原生PDO对象进行批量查询
-        $instance->getPdo()->exec($sql);
+        //$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        //检测是否支持innodb存储引擎
+        $pdoStatement = $pdo->query("SHOW VARIABLES LIKE 'innodb_version'");
+        $result = $pdoStatement->fetch();
+        if (!$result) {
+            throw new Exception("当前数据库不支持innodb存储引擎，请开启后再重新尝试安装");
+        }
+        $pdo->query("CREATE DATABASE IF NOT EXISTS `{$database}` CHARACTER SET utf8 COLLATE utf8_general_ci;");
+        $pdo->query("USE `{$database}`");
+        $pdo->exec($sql);
 
         file_put_contents($installLockFile, 1);
 
-        $dbConfigFile = APP_PATH . 'database.php';
+        $dbConfigFile = ROOT_PATH . '/config/database.php';
+
         $config = @file_get_contents($dbConfigFile);
         $callback = function ($matches) use ($hostname, $hostport, $username, $password, $database, $prefix) {
             $field = $matches[1];
@@ -88,7 +83,7 @@ class Install extends Command
         // 写入数据库配置
         file_put_contents($dbConfigFile, $config);
 
-        \think\Cache::rm('__menu__');
+        \think\facade\Cache::rm('__menu__');
 
         $output->info("Install Successed!");
     }
