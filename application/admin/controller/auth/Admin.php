@@ -123,10 +123,14 @@ class Admin extends Backend
                 $params['salt'] = Random::alnum();
                 $params['password'] = md5(md5($params['password']) . $params['salt']);
                 $params['avatar'] = '/assets/img/avatar.png'; //设置新管理员默认头像。
-                $result = $this->model->validate('Admin.add')->save($params);
-                if ($result === false) {
-                    $this->error($this->model->getError());
+//                $result = $this->model->validate('Admin.add')->save($params);
+                $result = $this->validate($params,'app\admin\validate\Admin.add');
+                if (true !== $result) {
+//                    $this->error($this->model->getError());
+                    $this->error($result);
                 }
+                $this->model->save($params);
+
                 $group = $this->request->post("group/a");
 
                 //过滤不允许的组别,避免越权
@@ -163,12 +167,15 @@ class Admin extends Backend
                     unset($params['password'], $params['salt']);
                 }
                 //这里需要针对username和email做唯一验证
-                $adminValidate = \think\Loader::validate('Admin');
+                $adminValidate = validate('Admin');
                 $adminValidate->rule([
                     'username' => 'require|max:50|unique:admin,username,' . $row->id,
                     'email' => 'require|email|unique:admin,email,' . $row->id,
                 ]);
-                $result = $row->validate('Admin.edit')->save($params);
+                if (!$adminValidate->scene('edit')->check($params)) {
+                    $this->error($adminValidate->getError());
+                }
+                $result = $row->save($params);
                 if ($result === false) {
                     $this->error($row->getError());
                 }
@@ -211,6 +218,7 @@ class Admin extends Backend
             $adminList = $this->model->where('id', 'in', $ids)->where('id', 'in', function ($query) use ($childrenGroupIds) {
                 $query->name('auth_group_access')->where('group_id', 'in', $childrenGroupIds)->field('uid');
             })->select();
+
             if ($adminList) {
                 $deleteIds = [];
                 foreach ($adminList as $k => $v) {
