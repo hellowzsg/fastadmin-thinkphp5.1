@@ -230,7 +230,7 @@ class Group extends Backend
         }
         if (($pid || $parentGroupModel) && (!$id || $currentGroupModel)) {
             $id = $id ? $id : null;
-            $ruleList = collection(model('AuthRule')->order('weigh', 'desc')->order('id', 'asc')->select())->toArray();
+            $ruleList = model('AuthRule')->order('weigh', 'desc')->order('id', 'asc')->select()->toArray();
             //读取父类角色所有节点列表
             $parentRuleList = [];
             if (in_array('*', explode(',', $parentGroupModel->rules))) {
@@ -249,7 +249,7 @@ class Group extends Backend
             //当前所有正常规则列表
             $ruleTree->init($parentRuleList);
             //角色组列表
-            $groupTree->init(collection(model('AuthGroup')->where('id', 'in', $this->childrenGroupIds)->select())->toArray());
+            $groupTree->init(model('AuthGroup')->where('id', 'in', $this->childrenGroupIds)->select()->toArray());
 
             //读取当前角色下规则ID集合
             $adminRuleIds = $this->auth->getRuleIds();
