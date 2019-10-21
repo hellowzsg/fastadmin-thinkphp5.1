@@ -99,7 +99,7 @@ class Attachment extends Backend
     public function del($ids = "")
     {
         if ($ids) {
-            \think\Hook::add('upload_delete', function ($params) {
+            \think\facade\Hook::add('upload_delete', function ($params) {
                 $attachmentFile = ROOT_PATH . '/public' . $params['url'];
                 if (is_file($attachmentFile)) {
                     @unlink($attachmentFile);
@@ -107,7 +107,7 @@ class Attachment extends Backend
             });
             $attachmentlist = $this->model->where('id', 'in', $ids)->select();
             foreach ($attachmentlist as $attachment) {
-                \think\Hook::listen("upload_delete", $attachment);
+                \think\facade\Hook::listen("upload_delete", $attachment);
                 $attachment->delete();
             }
             $this->success();
