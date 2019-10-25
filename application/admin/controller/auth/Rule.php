@@ -74,10 +74,14 @@ class Rule extends Backend
                 if (!$params['ismenu'] && !$params['pid']) {
                     $this->error(__('The non-menu rule must have parent'));
                 }
-                $result = $this->model->validate()->save($params);
-                if ($result === false) {
-                    $this->error($this->model->getError());
+//                $result = $this->model->validate()->save($params);
+                $result = $this->validate($params,'app\admin\validate\AuthRule');
+                if ($result !== true) {
+//                    $this->error($this->model->getError());
+                    $this->error($result);
                 }
+                $this->model->save($params);
+
                 Cache::rm('__menu__');
                 $this->success();
             }
@@ -108,12 +112,20 @@ class Rule extends Backend
                     }
                 }
                 //这里需要针对name做唯一验证
-                $ruleValidate = \think\Loader::validate('AuthRule');
+//                $ruleValidate = \think\Loader::validate('AuthRule');
+                $ruleValidate = validate('AuthRule');
                 $ruleValidate->rule([
                     'name' => 'require|format|unique:AuthRule,name,' . $row->id,
                 ]);
-                $result = $row->validate()->save($params);
-                if ($result === false) {
+                if (!$ruleValidate->check($params)) {
+                    $this->error($ruleValidate->getError());
+                }
+//                $result = $row->validate()->save($params);
+//                if ($result === false) {
+//                    $this->error($row->getError());
+//                }
+                $result = $row->save($params);
+                if (false === $result) {
                     $this->error($row->getError());
                 }
                 Cache::rm('__menu__');
