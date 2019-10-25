@@ -4,7 +4,7 @@
 ## **安装使用**
 ### **环境要求**
 ```
-PHP >= 5.5.0 (推荐PHP7.1版本)
+PHP >= PHP7.1
 Mysql >= 5.5.0 (需支持innodb引擎)
 Apache 或 Nginx
 PDO PHP Extension
