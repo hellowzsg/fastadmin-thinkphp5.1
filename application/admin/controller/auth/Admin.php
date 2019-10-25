@@ -167,7 +167,12 @@ class Admin extends Backend
                     unset($params['password'], $params['salt']);
                 }
                 //这里需要针对username和email做唯一验证
+//                $adminValidate = \think\Loader::validate('Admin');
                 $adminValidate = validate('Admin');
+//                $adminValidate = \think\Validate::make([
+//                    'username' => 'require|max:50|unique:admin,username,' . $row->id,
+//                    'email' => 'require|email|unique:admin,email,' . $row->id,
+//                ]);
                 $adminValidate->rule([
                     'username' => 'require|max:50|unique:admin,username,' . $row->id,
                     'email' => 'require|email|unique:admin,email,' . $row->id,
@@ -175,6 +180,11 @@ class Admin extends Backend
                 if (!$adminValidate->scene('edit')->check($params)) {
                     $this->error($adminValidate->getError());
                 }
+//                $validateRes = $this->validate($params,'app\admin\validate\Admin.edit');
+//                if (true !== $validateRes) {
+//                    $this->error($validateRes);
+//                }
+//                $result = $row->validate('Admin.edit')->save($params);
                 $result = $row->save($params);
                 if ($result === false) {
                     $this->error($row->getError());
