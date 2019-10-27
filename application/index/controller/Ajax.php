@@ -3,7 +3,7 @@
 namespace app\index\controller;
 
 use app\common\controller\Frontend;
-think\facade\Lang
+use think\facade\Lang;
 
 /**
  * Ajax异步请求接口
