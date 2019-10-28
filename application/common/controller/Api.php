@@ -134,10 +134,10 @@ class Api
             }
         }
 
-        $upload = \app\common\model\Config::upload();
+        $upload = (object)\app\common\model\Config::upload();
 
          // 上传信息配置后
-        Hook::listen("upload_config_init", (object)$upload);
+        Hook::listen("upload_config_init", $upload);
         $upload = (array)$upload;
         
 //        Config::set('upload', array_merge(Config::get('upload'), $upload));
