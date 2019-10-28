@@ -109,7 +109,9 @@ class Frontend extends Controller
 
         Config::set('upload', array_merge(Config::get('upload.'), $upload));
         // 配置信息后
-        Hook::listen("config_init", (object)$config);
+        $config = (object) $config;
+        Hook::listen("config_init", $config);
+        $config = (array) $config;
         // 加载当前控制器语言包
         $this->loadlang($controllername);
         $this->assign('site', $site);
