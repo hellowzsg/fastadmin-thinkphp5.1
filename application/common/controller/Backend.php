@@ -189,7 +189,8 @@ class Backend extends Controller
         $upload = \app\common\model\Config::upload();
 
         // 上传信息配置后
-        Hook::listen("upload_config_init", $upload);
+        Hook::listen("upload_config_init", (object)$upload);
+        $upload = (array)$upload;
 
         // 配置信息
         $config = [
@@ -209,7 +210,7 @@ class Backend extends Controller
         Config::set('upload', array_merge(Config::get('upload.'), $upload));
 
         // 配置信息后
-        Hook::listen("config_init", $config);
+        Hook::listen("config_init", (object)$config);
         //加载当前控制器语言包
         $this->loadlang($controllername);
         //渲染站点配置
