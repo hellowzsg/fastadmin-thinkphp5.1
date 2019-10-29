@@ -51,6 +51,9 @@ class Addon extends Backend
         if (!$name) {
             $this->error(__('Parameter %s can not be empty', $ids ? 'id' : 'name'));
         }
+		if (!preg_match("/^[a-zA-Z0-9]+$/", $name)) {
+		    $this->error(__('Addon name incorrect'));
+		}
         if (!is_dir(ADDON_PATH . $name)) {
             $this->error(__('Directory not found'));
         }
@@ -107,6 +110,9 @@ class Addon extends Backend
         if (!$name) {
             $this->error(__('Parameter %s can not be empty', 'name'));
         }
+		if (!preg_match("/^[a-zA-Z0-9]+$/", $name)) {
+		    $this->error(__('Addon name incorrect'));
+		}
         try {
             $uid = $this->request->post("uid");
             $token = $this->request->post("token");
@@ -140,6 +146,9 @@ class Addon extends Backend
         if (!$name) {
             $this->error(__('Parameter %s can not be empty', 'name'));
         }
+		if (!preg_match("/^[a-zA-Z0-9]+$/", $name)) {
+		    $this->error(__('Addon name incorrect'));
+		}
         try {
             Service::uninstall($name, $force);
             $this->success(__('Uninstall successful'));
@@ -161,6 +170,9 @@ class Addon extends Backend
         if (!$name) {
             $this->error(__('Parameter %s can not be empty', 'name'));
         }
+		if (!preg_match("/^[a-zA-Z0-9]+$/", $name)) {
+		    $this->error(__('Addon name incorrect'));
+		}
         try {
             $action = $action == 'enable' ? $action : 'disable';
             //调用启用、禁用的方法
@@ -206,7 +218,10 @@ class Addon extends Backend
                 if (!$name) {
                     throw new Exception(__('Addon info file data incorrect'));
                 }
-
+				if (!preg_match("/^[a-zA-Z0-9]+$/", $name)) {
+					$this->error(__('Addon name incorrect'));
+				}
+				
                 $newAddonDir = ADDON_PATH . $name . DS;
                 if (is_dir($newAddonDir)) {
                     throw new Exception(__('Addon already exists'));
@@ -264,6 +279,9 @@ class Addon extends Backend
         if (!$name) {
             $this->error(__('Parameter %s can not be empty', 'name'));
         }
+		if (!preg_match("/^[a-zA-Z0-9]+$/", $name)) {
+		    $this->error(__('Addon name incorrect'));
+		}
         try {
             $uid = $this->request->post("uid");
             $token = $this->request->post("token");
