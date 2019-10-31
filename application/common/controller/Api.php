@@ -140,10 +140,10 @@ class Api
         Hook::listen("upload_config_init", $upload);
         $upload = (array)$upload;
         
-//        Config::set('upload', array_merge(Config::get('upload'), $upload));
-        $upload_conf = Config::get('upload');
-        $upload_conf = is_array($upload_conf)? $upload_conf: [];
-        Config::set('upload', array_merge($upload_conf, $upload));
+        Config::set(array_merge(Config::get('upload.'), $upload), 'upload');
+        // $upload_conf = Config::get('upload');
+        // $upload_conf = is_array($upload_conf)? $upload_conf: [];
+        // Config::set('upload', array_merge($upload_conf, $upload));
 
         // 加载当前控制器语言包
         $this->loadlang($controllername);
