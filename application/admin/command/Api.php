@@ -14,7 +14,7 @@ class Api extends Command
 {
     protected function configure()
     {
-        $site = Config::get('site');
+        $site = Config::get('site.');
         $this
             ->setName('api')
             ->addOption('url', 'u', Option::VALUE_OPTIONAL, 'default api url', '')
