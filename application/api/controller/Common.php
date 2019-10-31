@@ -31,8 +31,10 @@ class Common extends Api
             $content = [
                 'citydata'    => Area::getCityFromLngLat($lng, $lat),
                 'versiondata' => Version::check($version),
-                'uploaddata'  => Config::get('upload'),
-                'coverdata'   => Config::get("cover"),
+                'uploaddata'  => Config::get('upload.'),
+                'coverdata'   => Config::get("cover."),
+                // 'uploaddata'  => Config::get('upload.'),
+                // 'coverdata'   => Config::get("cover."),
             ];
             $this->success('', $content);
         } else {
@@ -55,7 +57,7 @@ class Common extends Api
         //判断是否已经存在附件
         $sha1 = $file->hash();
 
-        $upload = Config::get('upload');
+        $upload = Config::get('upload.');
 
         preg_match('/(\d+)(\w+)/', $upload['maxsize'], $matches);
         $type = strtolower($matches[2]);
@@ -130,7 +132,7 @@ class Common extends Api
             $attachment = model("attachment");
             $attachment->data(array_filter($params));
             $attachment->save();
-            \think\Hook::listen("upload_after", $attachment);
+            \think\facade\Hook::listen("upload_after", $attachment);
             $this->success(__('Upload successful'), [
                 'url' => $uploadDir . $splInfo->getSaveName()
             ]);
