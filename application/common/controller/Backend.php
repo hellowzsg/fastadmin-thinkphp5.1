@@ -207,7 +207,7 @@ class Backend extends Controller
         ];
         $config = array_merge($config, Config::get("template.tpl_replace_string"));
 
-        Config::set('upload', array_merge(Config::get('upload.'), $upload));
+        Config::set(array_merge(Config::get('upload.'), $upload), 'upload');
 
         // 配置信息后
         $config = (object)$config;
