@@ -57,7 +57,7 @@ class Ajax extends Backend
         $sha1 = $file->hash();
         $extparam = $this->request->post();
 
-        $upload = Config::get('upload');
+        $upload = Config::get('upload.');
 
         preg_match('/(\d+)(\w+)/', $upload['maxsize'], $matches);
         $type = strtolower($matches[2]);
