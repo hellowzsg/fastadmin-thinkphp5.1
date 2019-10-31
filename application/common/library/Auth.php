@@ -30,7 +30,7 @@ class Auth
 
     public function __construct($options = [])
     {
-        if ($config = Config::get('user')) {
+        if ($config = Config::get('user.')) {
             $this->config = array_merge($this->config, $config);
         }
         $this->options = array_merge($this->config, $options);
