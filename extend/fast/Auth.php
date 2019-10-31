@@ -58,7 +58,7 @@ class Auth
 
     public function __construct()
     {
-        if ($auth = Config::get('auth')) {
+        if ($auth = Config::get('auth.')) {
             $this->config = array_merge($this->config, $auth);
         }
         // 初始化request
