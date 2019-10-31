@@ -59,7 +59,7 @@ class Redis extends Driver
      */
     protected function getEncryptedToken($token)
     {
-        $config = \think\Config::get('token');
+        $config = \think\facade\Config::get('token.');
         return $this->options['tokenprefix'] . hash_hmac($config['hashalgo'], $token, $config['key']);
     }
 
