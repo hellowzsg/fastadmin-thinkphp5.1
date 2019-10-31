@@ -70,7 +70,7 @@ class Token
                 // 获取默认Token配置，并连接
                 $options = Config::get('token.' . $default['type']) ?: $default;
             } elseif (empty($options)) {
-                $options = Config::get('token');
+                $options = Config::get('token.');
             }
             $options = is_array($options)? $options: [];
 
