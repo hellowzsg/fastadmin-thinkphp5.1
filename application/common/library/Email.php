@@ -51,7 +51,7 @@ class Email
      */
     public function __construct($options = [])
     {
-        if ($config = Config::get('site')) {
+        if ($config = Config::get('site.')) {
             $this->options = array_merge($this->options, $config);
         }
         $this->options = array_merge($this->options, $options);
