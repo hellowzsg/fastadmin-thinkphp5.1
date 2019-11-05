@@ -234,10 +234,10 @@ class Extractor
             $urlArr = [];
             $className = $class->getName();
 
-            list($prefix, $suffix) = explode('\\' . \think\Config::get('url_controller_layer') . '\\', $className);
+            list($prefix, $suffix) = explode('\\' . \think\facade\Config::get('url_controller_layer') . '\\', $className);
             $prefixArr = explode('\\', $prefix);
             $suffixArr = explode('\\', $suffix);
-            if ($prefixArr[0] == \think\Config::get('app_namespace')) {
+            if ($prefixArr[0] == \think\facade\Config::get('app_namespace')) {
                 $prefixArr[0] = '';
             }
             $urlArr = array_merge($urlArr, $prefixArr);
