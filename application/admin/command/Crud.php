@@ -3,7 +3,7 @@
 namespace app\admin\command;
 
 use fast\Form;
-use think\Config;
+use think\facade\Config;
 use think\console\Command;
 use think\console\Input;
 use think\console\input\Option;
@@ -293,9 +293,13 @@ class Crud extends Command
 
         $this->reservedField = array_merge($this->reservedField, [$this->createTimeField, $this->updateTimeField, $this->deleteTimeField]);
 
-        $dbconnect = Db::connect($db);
-        $dbname = Config::get($db . '.database');
-        $prefix = Config::get($db . '.prefix');
+//        $dbconnect = Db::connect($db);
+//        $dbname = Config::get($db . '.database');
+//        $prefix = Config::get($db . '.prefix');
+        $dbconfig = Config::pull($db);
+        $dbconnect = Db::connect($dbconfig);
+        $dbname = $dbconfig['database'];
+        $prefix = $dbconfig['prefix'];
 
         //模块
         $moduleName = 'admin';
@@ -862,7 +866,8 @@ class Crud extends Command
                 'editList'                => $editList,
                 'javascriptList'          => $javascriptList,
                 'langList'                => $langList,
-                'sofeDeleteClassPath'     => in_array($this->deleteTimeField, $fieldArr) ? "use traits\model\SoftDelete;" : '',
+//                'sofeDeleteClassPath'     => in_array($this->deleteTimeField, $fieldArr) ? "use traits\model\SoftDelete;" : '',
+                'sofeDeleteClassPath'     => in_array($this->deleteTimeField, $fieldArr) ? "use think\model\concern\SoftDelete;" : '',
                 'softDelete'              => in_array($this->deleteTimeField, $fieldArr) ? "use SoftDelete;" : '',
                 'modelAutoWriteTimestamp' => in_array($this->createTimeField, $fieldArr) || in_array($this->updateTimeField, $fieldArr) ? "'int'" : 'false',
                 'createTime'              => in_array($this->createTimeField, $fieldArr) ? "'{$this->createTimeField}'" : 'false',
