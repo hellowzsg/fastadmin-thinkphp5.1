@@ -43,7 +43,7 @@ class Api extends Command
         }
         $lang = include_once $langFile;
         // 目标目录
-        $output_dir = ROOT_PATH . 'public' . DS;
+        $output_dir = ROOT_PATH .DS. 'public' . DS;
         $output_file = $output_dir . $input->getOption('output');
         if (is_file($output_file) && !$force) {
             throw new Exception("api index file already exists!\nIf you need to rebuild again, use the parameter --force=true ");
