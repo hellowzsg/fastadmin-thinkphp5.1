@@ -2,7 +2,7 @@
 
 namespace app\admin\command\Api\library;
 
-use think\Config;
+use think\facade\Config;
 
 /**
  * @website https://github.com/calinrada/php-apidoc
@@ -31,7 +31,11 @@ class Builder
     public function __construct($classes = [])
     {
         $this->classes = array_merge($this->classes, $classes);
-        $this->view = new \think\View(Config::get('template'), Config::get('view_replace_str'));
+//        $this->view = new \think\View(Config::get('template'), Config::get('view_replace_str'));
+        $this->view = new \think\View();
+        $this->view->engine(Config::get('template.'));
+
+
     }
 
     protected function extractAnnotations()
