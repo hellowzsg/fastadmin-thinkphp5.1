@@ -1,5 +1,6 @@
 **FastAdmin 完全升级 thinkphp5.1**
-
+fastadmin： 1.0.0.20190418_beta
+thinkphp: 5.1.38 LTS
 
 ## **安装使用**
 ### **环境要求**
