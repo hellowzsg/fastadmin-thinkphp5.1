@@ -5,7 +5,7 @@ namespace app\admin\command;
 use app\admin\model\AuthRule;
 use ReflectionClass;
 use ReflectionMethod;
-use think\Cache;
+use think\facade\Cache;
 use think\facade\Config;
 use think\console\Command;
 use think\console\Input;
@@ -220,7 +220,8 @@ class Menu extends Command
         $modelRegex = preg_match($modelRegexArr[0], $classContent) ? $modelRegexArr[0] : $modelRegexArr[1];
         preg_match_all($modelRegex, $classContent, $matches);
         if (isset($matches[1]) && isset($matches[1][0]) && $matches[1][0]) {
-            \think\Request::instance()->module('admin');
+//            \think\Request::instance()->module('admin');
+            \think\facade\Request::setModule('admin');
             $model = model($matches[1][0]);
             if (in_array('trashed', get_class_methods($model))) {
                 $withSofeDelete = true;
@@ -248,7 +249,7 @@ class Menu extends Command
         $controllerTitle = trim(preg_replace(array('/^\/\*\*(.*)[\n\r\t]/u', '/[\s]+\*\//u', '/\*\s@(.*)/u', '/[\s|\*]+/u'), '', $classComment));
 
         //导入中文语言包
-        \think\Lang::load(dirname(__DIR__) . DS . 'lang/zh-cn.php');
+        \think\facade\Lang::load(dirname(__DIR__) . DS . 'lang/zh-cn.php');
 
         //先导入菜单的数据
         $pid = 0;
