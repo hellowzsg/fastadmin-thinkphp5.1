@@ -29,12 +29,12 @@ Less (可选,用于编辑less文件,如果你需要增改css样式,最好安装�
 5. 访问地址，在线安装
 5. 访问主机地址即可在线安装
 6. 点个star呗~~
-
+## **升级日志**  
+[日志](https://github.com/hellowzsg/fastadmin-thinkphp5.1/blob/master/UPGRADE.md)
 ## **注意事项**
-1. 不可使用fastadmin官方插件(2019.09.17 fastadmin 基于ThinkPHP5.0)
+1. 不可使用fastadmin官方插件,所有插件基本都需要适配
 ## **项目地址**
 githup https://github.com/hellowzsg/fastadmin-thinkphp5.1.git
 ## **参考项目**
 fastadmin  https://gitee.com/karson/fastadmin.git  
 cygmris/think2h4ck  https://github.com/cygmris/think2h4ck.git
-## **版权信息**
