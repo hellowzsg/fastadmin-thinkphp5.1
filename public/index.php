@@ -13,9 +13,9 @@
 namespace think;
 
 // 定义应用目录
-define('APP_PATH', __DIR__ . '/../application/');
-define('ROOT_PATH', __DIR__ . '/../');
 define('DS', DIRECTORY_SEPARATOR);
+define('ROOT_PATH', __DIR__ . DS . '..' . DS);
+define('APP_PATH', __DIR__ . '/../application/');
 define('EXT', '.php');
 
 require __DIR__ . '/../thinkphp/base.php';
