@@ -3,7 +3,7 @@
 namespace think;
 
 define('DS',DIRECTORY_SEPARATOR);
-define('ROOT_PATH', __DIR__);
+define('ROOT_PATH', __DIR__.DS);
 define('APP_PATH', __DIR__ . '/application/');
 // 加载基础文件
 require __DIR__ . '/thinkphp/base.php';
