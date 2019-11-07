@@ -68,7 +68,7 @@ class Install extends Command
 
         file_put_contents($installLockFile, 1);
 
-        $dbConfigFile = ROOT_PATH . '/config/database.php';
+        $dbConfigFile = ROOT_PATH . 'config/database.php';
 
         $config = @file_get_contents($dbConfigFile);
         $callback = function ($matches) use ($hostname, $hostport, $username, $password, $database, $prefix) {
