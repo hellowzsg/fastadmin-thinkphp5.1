@@ -55,7 +55,7 @@ class Min extends Command
 
         if (!$nodeExec) {
             // if (IS_WIN) {
-            if (PHP_SAPI == 'cli') {
+            if (strpos(PHP_OS, 'WIN') !== false) {
                 // Winsows下请手动配置配置该值,一般将该值配置为 '"C:\Program Files\nodejs\node.exe"'，除非你的Node安装路径有变更
                 $nodeExec = 'C:\Program Files\nodejs\node.exe';
                 if (file_exists($nodeExec)) {
