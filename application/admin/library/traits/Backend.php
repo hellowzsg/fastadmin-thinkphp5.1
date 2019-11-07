@@ -353,7 +353,7 @@ trait Backend
         if (!$file) {
             $this->error(__('Parameter %s can not be empty', 'file'));
         }
-        $filePath = ROOT_PATH . DS . 'public' . DS . $file;
+        $filePath = ROOT_PATH.'public' . DS . $file;
         if (!is_file($filePath)) {
             $this->error(__('No results were found'));
         }
