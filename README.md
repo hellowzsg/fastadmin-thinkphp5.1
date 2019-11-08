@@ -32,9 +32,10 @@ Less (可选,用于编辑less文件,如果你需要增改css样式,最好安装�
 ## **升级日志**  
 [日志](https://github.com/hellowzsg/fastadmin-thinkphp5.1/blob/master/UPGRADE.md)
 ## **注意事项**
-1. 不可使用fastadmin官方插件,所有插件基本都需要适配
+不可使用fastadmin官方插件,所有插件基本都需要适配
+
 ## **项目地址**
-githup https://github.com/hellowzsg/fastadmin-thinkphp5.1.git
+https://github.com/hellowzsg/fastadmin-thinkphp5.1.git
 ## **参考项目**
 fastadmin  https://gitee.com/karson/fastadmin.git  
 cygmris/think2h4ck  https://github.com/cygmris/think2h4ck.git
