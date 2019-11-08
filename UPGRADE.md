@@ -8,4 +8,12 @@
   1. 适配 **alisms**,**alioss**插件
   2. 解决tp5.1钩子无法引用传值问题
   3. 修改验证器使用方式
-  4. 适配命令行操作
+  4. 适配以下命令行
+```
+    'app\admin\command\Crud',
+    'app\admin\command\Menu',
+    'app\admin\command\Install',
+    'app\admin\command\Min',
+    'app\admin\command\Addon',
+    'app\admin\command\Api',
+```
