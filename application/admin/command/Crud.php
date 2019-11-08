@@ -844,7 +844,8 @@ class Crud extends Command
             }
 
             $data = [
-                'databaseConfigName'      => $db,
+                //'databaseConfigName'      => $db,
+                'databaseConfigName'      => $dbname,
                 'controllerNamespace'     => $controllerNamespace,
                 'modelNamespace'          => $modelNamespace,
                 'validateNamespace'       => $validateNamespace,
