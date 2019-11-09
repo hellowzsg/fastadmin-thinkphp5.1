@@ -11,10 +11,10 @@
 // +----------------------------------------------------------------------
 
 return [
-    'app\admin\command\Crud',
-    'app\admin\command\Menu',
-    'app\admin\command\Install',
-    'app\admin\command\Min',
-    'app\admin\command\Addon',
-    'app\admin\command\Api',
+    'crud'      => 'app\admin\command\Crud',
+    'menu'      => 'app\admin\command\Menu',
+    'install'   => 'app\admin\command\Install',
+    'min'       => 'app\admin\command\Min',
+    'addon'     => 'app\admin\command\Addon',
+    'api'       => 'app\admin\command\Api',
 ];
