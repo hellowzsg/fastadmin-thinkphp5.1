@@ -227,7 +227,7 @@ class Addon extends Command
                     throw new Exception(__('Addon info version incorrect'));
                 }
 
-                $addonTmpDir = Env::get('runtime_path') . 'addons' . DS;
+                $addonTmpDir = \think\facade\Env::get('runtime_path') . 'addons' . DS;
                 if (!is_dir($addonTmpDir)) {
                     @mkdir($addonTmpDir, 0755, true);
                 }
