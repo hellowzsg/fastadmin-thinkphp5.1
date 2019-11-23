@@ -17,3 +17,6 @@
     'app\admin\command\Addon',
     'app\admin\command\Api',
 ```
+### 2019.11
+1. 适配富文本编辑器插件**nkeditor**  
+2. 解决插件二级目录控制器找不到问题
