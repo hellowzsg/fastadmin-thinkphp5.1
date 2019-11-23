@@ -35,7 +35,9 @@ Less (可选,用于编辑less文件,如果你需要增改css样式,最好安装�
 不可使用fastadmin官方插件,所有插件基本都需要适配
 
 ## **项目地址**
-https://github.com/hellowzsg/fastadmin-thinkphp5.1.git
+ fastadmin-tp5.1  https://github.com/hellowzsg/fastadmin-thinkphp5.1.git  
+ fastadmin-addons-tp5.1   https://github.com/hellowzsg/fastadmin-addons-thinkphp51.git  
+ 
 ## **参考项目**
 fastadmin  https://gitee.com/karson/fastadmin.git  
 cygmris/think2h4ck  https://github.com/cygmris/think2h4ck.git
