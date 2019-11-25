@@ -33,7 +33,7 @@
                 {%visibleFieldList%}
                 {%relationVisibleFieldList%}
             }
-            $list = collection($list)->toArray();
+            $list = $list->toArray();
             $result = array("total" => $total, "rows" => $list);
 
             return json($result);
