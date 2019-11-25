@@ -3,6 +3,6 @@
     {
         self::afterInsert(function ($row) {
             $pk = $row->getPk();
-            $row->getQuery()->where($pk, $row[$pk])->update(['{%order%}' => $row[$pk]]);
+            $row->where($pk, $row[$pk])->update(['{%order%}' => $row[$pk]]);
         });
     }
