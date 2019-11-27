@@ -190,7 +190,7 @@ class Auth
             'status' => 'normal',
         ];
         if (!in_array('*', $ids)) {
-            $where['id'] = ['in', $ids];
+            $where['id'] = $ids;
         }
         //读取用户组所有权限规则
         $this->rules = Db::name($this->config['auth_rule'])->where($where)->field('id,pid,condition,icon,name,title,ismenu')->select();
