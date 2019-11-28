@@ -270,6 +270,7 @@ class Backend extends Controller
         if ($relationSearch) {
             if (!empty($this->model)) {
                 $name = \think\Loader::parseName(basename(str_replace('\\', '/', get_class($this->model))));
+                $name = $this->model->getTable();
                 $tableName = $name . '.';
             }
             $sortArr = explode(',', $sort);
@@ -452,7 +453,8 @@ class Backend extends Controller
 
         //如果有primaryvalue,说明当前是初始化传值
         if ($primaryvalue !== null) {
-            $where = [$primarykey => ['in', $primaryvalue]];
+//            $where = [$primarykey => ['in', $primaryvalue]];
+            $where = [$primarykey => explode(',', $primaryvalue)];
         } else {
             $where = function ($query) use ($word, $andor, $field, $searchfield, $custom) {
                 $logic = $andor == 'AND' ? '&' : '|';
@@ -494,7 +496,7 @@ class Backend extends Controller
                     'pid' => isset($item['pid']) ? $item['pid'] : 0,
                 ];
             }
-            if ($istree) {
+            if ($istree && !$primaryvalue) {
                 $tree = Tree::instance();
                 $tree->init(collection($list)->toArray(), 'pid');
                 $list = $tree->getTreeList($tree->getTreeArray(0), $field);
