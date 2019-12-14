@@ -5,6 +5,8 @@ namespace app\admin\controller\auth;
 use app\admin\model\AuthGroup;
 use app\common\controller\Backend;
 use fast\Tree;
+use think\Db;
+use think\Exception;
 
 /**
  * 角色组
@@ -89,10 +91,11 @@ class Group extends Backend
     public function add()
     {
         if ($this->request->isPost()) {
+            $this->token();
             $params = $this->request->post("row/a", [], 'strip_tags');
             $params['rules'] = explode(',', $params['rules']);
             if (!in_array($params['pid'], $this->childrenGroupIds)) {
-                $this->error(__('The parent group can not be its own child'));
+                $this->error(__('The parent group exceeds permission limit'));
             }
             $parentmodel = model("AuthGroup")->get($params['pid']);
             if (!$parentmodel) {
@@ -122,15 +125,23 @@ class Group extends Backend
      */
     public function edit($ids = null)
     {
+		if (!in_array($ids, $this->childrenGroupIds)) {
+            $this->error(__('You have no permission'));
+        }
         $row = $this->model->get(['id' => $ids]);
         if (!$row) {
             $this->error(__('No Results were found'));
         }
         if ($this->request->isPost()) {
+            $this->token();
             $params = $this->request->post("row/a", [], 'strip_tags');
             // 父节点不能是它自身的子节点
             if (!in_array($params['pid'], $this->childrenGroupIds)) {
-                $this->error(__('The parent group can not be its own child'));
+                $this->error(__('The parent group exceeds permission limit'));
+            }
+			// 父节点不能是它自身的子节点或自己本身
+            if (in_array($params['pid'], Tree::instance()->getChildrenIds($row->id,true))){
+                $this->error(__('The parent group can not be its own child or itself'));
             }
             $params['rules'] = explode(',', $params['rules']);
 
@@ -149,8 +160,22 @@ class Group extends Backend
             $rules = in_array('*', $currentrules) ? $rules : array_intersect($currentrules, $rules);
             $params['rules'] = implode(',', $rules);
             if ($params) {
-                $row->save($params);
-                $this->success();
+                Db::startTrans();
+                try {
+                    $row->save($params);
+                    $children_auth_groups = model("AuthGroup")->all(['id'=>['in',implode(',',(Tree::instance()->getChildrenIds($row->id)))]]);
+                    $childparams = [];
+                    foreach ($children_auth_groups as $key=>$children_auth_group) {
+                        $childparams[$key]['id'] = $children_auth_group->id;
+                        $childparams[$key]['rules'] = implode(',', array_intersect(explode(',', $children_auth_group->rules), $rules));
+                    }
+                    model("AuthGroup")->saveAll($childparams);
+                    Db::commit();
+                    $this->success();
+                }catch (Exception $e){
+                    Db::rollback();
+                    $this->error($e->getMessage());
+                }
             }
             $this->error();
             return;

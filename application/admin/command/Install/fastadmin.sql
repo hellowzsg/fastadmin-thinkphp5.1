@@ -23,6 +23,7 @@ CREATE TABLE `fa_admin` (
   `email` varchar(100) NOT NULL DEFAULT '' COMMENT '电子邮箱',
   `loginfailure` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '失败次数',
   `logintime` int(10) DEFAULT NULL COMMENT '登录时间',
+  `loginip` varchar(50) DEFAULT NULL COMMENT '登录IP',
   `createtime` int(10) DEFAULT NULL COMMENT '创建时间',
   `updatetime` int(10) DEFAULT NULL COMMENT '更新时间',
   `token` varchar(59) NOT NULL DEFAULT '' COMMENT 'Session标识',
@@ -35,7 +36,7 @@ CREATE TABLE `fa_admin` (
 -- Records of fa_admin
 -- ----------------------------
 BEGIN;
-INSERT INTO `fa_admin` VALUES (1, 'admin', 'Admin', '075eaec83636846f51c152f29b98a2fd', 's4f3', '/assets/img/avatar.png', 'admin@fastadmin.net', 0, 1502029281, 1492186163, 1502029281, 'd3992c3b-5ecc-4ecb-9dc2-8997780fcadc', 'normal');
+INSERT INTO `fa_admin` VALUES (1, 'admin', 'Admin', '075eaec83636846f51c152f29b98a2fd', 's4f3', '/assets/img/avatar.png', 'admin@fastadmin.net', 0, 1502029281, '127.0.0.1',1492186163, 1502029281, 'd3992c3b-5ecc-4ecb-9dc2-8997780fcadc', 'normal');
 COMMIT;
 
 -- ----------------------------
@@ -218,10 +219,8 @@ INSERT INTO `fa_auth_rule` VALUES (55, 'file', 4, 'addon/index', 'View', 'fa fa-
 INSERT INTO `fa_auth_rule` VALUES (56, 'file', 4, 'addon/add', 'Add', 'fa fa-circle-o', '', '', 0, 1502035509, 1502035509, 0, 'normal');
 INSERT INTO `fa_auth_rule` VALUES (57, 'file', 4, 'addon/edit', 'Edit', 'fa fa-circle-o', '', '', 0, 1502035509, 1502035509, 0, 'normal');
 INSERT INTO `fa_auth_rule` VALUES (58, 'file', 4, 'addon/del', 'Delete', 'fa fa-circle-o', '', '', 0, 1502035509, 1502035509, 0, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (59, 'file', 4, 'addon/local', 'Local install', 'fa fa-circle-o', '', '', 0, 1502035509, 1502035509, 0, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (59, 'file', 4, 'addon/downloaded', 'Local addon', 'fa fa-circle-o', '', '', 0, 1502035509, 1502035509, 0, 'normal');
 INSERT INTO `fa_auth_rule` VALUES (60, 'file', 4, 'addon/state', 'Update state', 'fa fa-circle-o', '', '', 0, 1502035509, 1502035509, 0, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (61, 'file', 4, 'addon/install', 'Install', 'fa fa-circle-o', '', '', 0, 1502035509, 1502035509, 0, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (62, 'file', 4, 'addon/uninstall', 'Uninstall', 'fa fa-circle-o', '', '', 0, 1502035509, 1502035509, 0, 'normal');
 INSERT INTO `fa_auth_rule` VALUES (63, 'file', 4, 'addon/config', 'Setting', 'fa fa-circle-o', '', '', 0, 1502035509, 1502035509, 0, 'normal');
 INSERT INTO `fa_auth_rule` VALUES (64, 'file', 4, 'addon/refresh', 'Refresh', 'fa fa-circle-o', '', '', 0, 1502035509, 1502035509, 0, 'normal');
 INSERT INTO `fa_auth_rule` VALUES (65, 'file', 4, 'addon/multi', 'Multi', 'fa fa-circle-o', '', '', 0, 1502035509, 1502035509, 0, 'normal');

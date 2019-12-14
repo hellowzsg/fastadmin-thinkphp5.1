@@ -56,6 +56,7 @@ return [
     'Execute'                                               => '执行',
     'Close'                                                 => '关闭',
     'Choose'                                                => '选择',
+    'Go'                                                    => '跳转',
     'Search'                                                => '搜索',
     'Refresh'                                               => '刷新',
     'Install'                                               => '安装',
@@ -138,6 +139,7 @@ return [
     'Are you sure you want to delete this item?'            => '确定删除此项?',
     'Are you sure you want to delete or turncate?'          => '确定删除或清空?',
     'Are you sure you want to truncate?'                    => '确定清空?',
+    'Token verification error'                              => 'Token验证错误！',
     'You have no permission'                                => '你没有权限访问',
     'Please enter your username'                            => '请输入你的用户名',
     'Please enter your password'                            => '请输入你的密码',
@@ -180,4 +182,6 @@ return [
     'Admin log tips'                                        => '管理员可以查看自己所拥有的权限的管理员日志',
     'Group tips'                                            => '角色组可以有多个,角色有上下级层级关系,如果子角色有角色组和管理员的权限则可以派生属于自己组别的下级角色组或管理员',
     'Rule tips'                                             => '规则通常对应一个控制器的方法,同时左侧的菜单栏数据也从规则中体现,通常建议通过命令行进行生成规则节点',
+	'Access is allowed only to the super management group'  => '仅超级管理组能访问',
+    'Local addon'                                           => '本地插件',
 ];

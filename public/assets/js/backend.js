@@ -93,9 +93,9 @@ define(['fast', 'template', 'moment'], function (Fast, Template, Moment) {
                 if (url.indexOf("{ids}") > -1) {
                     var ids = 0;
                     var tableId = $(elem).data("table-id");
-                    if (tableId && $(tableId).size() > 0 && $(tableId).data("bootstrap.table")) {
+                    if (tableId && $("#" + tableId).size() > 0 && $("#" + tableId).data("bootstrap.table")) {
                         var Table = require("table");
-                        ids = Table.api.selectedids($(tableId)).join(",");
+                        ids = Table.api.selectedids($("#" + tableId)).join(",");
                     }
                     url = url.replace(/\{ids\}/g, ids);
                 }
@@ -140,7 +140,7 @@ define(['fast', 'template', 'moment'], function (Fast, Template, Moment) {
             $(document).on('click', '.btn-dialog,.dialogit', function (e) {
                 var that = this;
                 var options = $.extend({}, $(that).data() || {});
-                var url = Backend.api.replaceids(that, $(that).attr('href'));
+				var url = Backend.api.replaceids(that, $(that).data("url") || $(that).attr('href'));
                 var title = $(that).attr("title") || $(that).data("title") || $(that).data('original-title');
                 var button = Backend.api.gettablecolumnbutton(options);
                 if (button && typeof button.callback === 'function') {
@@ -152,7 +152,7 @@ define(['fast', 'template', 'moment'], function (Fast, Template, Moment) {
                         Layer.close(index);
                     });
                 } else {
-                    Backend.api.open(url, title, options);
+					window[$(that).data("window") || 'self'].Backend.api.open(url, title, options);
                 }
                 return false;
             });
@@ -160,15 +160,16 @@ define(['fast', 'template', 'moment'], function (Fast, Template, Moment) {
             $(document).on('click', '.btn-addtabs,.addtabsit', function (e) {
                 var that = this;
                 var options = $.extend({}, $(that).data() || {});
-                var url = Backend.api.replaceids(that, $(that).attr('href'));
+				var url = Backend.api.replaceids(that, $(that).data("url") || $(that).attr('href'));
                 var title = $(that).attr("title") || $(that).data("title") || $(that).data('original-title');
+                var icon = $(that).attr("icon") || $(that).data("icon");
                 if (typeof options.confirm !== 'undefined') {
                     Layer.confirm(options.confirm, function (index) {
-                        Backend.api.addtabs(url, title);
+                        Backend.api.addtabs(url, title, icon);
                         Layer.close(index);
                     });
                 } else {
-                    Backend.api.addtabs(url, title);
+                    Backend.api.addtabs(url, title, icon);
                 }
                 return false;
             });

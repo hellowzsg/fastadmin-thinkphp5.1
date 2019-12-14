@@ -8,6 +8,7 @@ use think\facade\Config;
 use think\facade\Hook;
 use think\facade\Lang;
 use think\Loader;
+use think\Facade\Validate;
 
 /**
  * 前台控制器基类
@@ -135,5 +136,21 @@ class Frontend extends Controller
     protected function assignconfig($name, $value = '')
     {
         $this->view->config = array_merge($this->view->config ? $this->view->config : [], is_array($name) ? $name : [$name => $value]);
+    }
+
+    /**
+     * 刷新Token
+     */
+    protected function token()
+    {
+        $token = $this->request->post('__token__');
+
+        //验证Token
+        if (!Validate::is($token, "token", ['__token__' => $token])) {
+            $this->error(__('Token verification error'), '', ['__token__' => $this->request->token()]);
+        }
+
+        //刷新Token
+        $this->request->token();
     }
 }

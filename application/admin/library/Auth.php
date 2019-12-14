@@ -58,6 +58,7 @@ class Auth extends \fast\Auth
         }
         $admin->loginfailure = 0;
         $admin->logintime = time();
+        $admin->loginip = request()->ip(0, false);
         $admin->token = Random::uuid();
         $admin->save();
         Session::set("admin", $admin->toArray());
@@ -99,6 +100,11 @@ class Auth extends \fast\Auth
             }
             //token有变更
             if ($key != md5(md5($id) . md5($keeptime) . md5($expiretime) . $admin->token)) {
+                return false;
+            }
+            $ip = request()->ip(0, false);
+            //IP有变动
+            if ($admin->loginip != $ip) {
                 return false;
             }
             Session::set("admin", $admin->toArray());
@@ -175,6 +181,9 @@ class Auth extends \fast\Auth
         if (Config::get('fastadmin.login_unique')) {
             $my = Admin::get($admin['id']);
             if (!$my || $my['token'] != $admin['token']) {
+                return false;
+            }
+            if (!isset($admin['loginip']) || $admin['loginip'] != request()->ip(0, false)) {
                 return false;
             }
         }
@@ -258,10 +267,17 @@ class Auth extends \fast\Auth
         foreach ($groups as $k => $v) {
             $groupIds[] = $v['id'];
         }
+        $originGroupIds = $groupIds;
+        foreach ($groups as $k => $v) {
+            if (in_array($v['pid'], $originGroupIds)) {
+                $groupIds = array_diff($groupIds, [$v['id']]);
+                unset($groups[$k]);
+            }
+        }
         // 取出所有分组
         $groupList = \app\admin\model\AuthGroup::where(['status' => 'normal'])->select();
         $objList = [];
-        foreach ($groups as $K => $v) {
+        foreach ($groups as $k => $v) {
             if ($v['rules'] === '*') {
                 $objList = $groupList;
                 break;
@@ -295,7 +311,6 @@ class Auth extends \fast\Auth
                 field('uid,group_id')
                 ->where('group_id', 'in', $groupIds)
                 ->select();
-
             foreach ($authGroupList as $k => $v) {
                 $childrenAdminIds[] = $v['uid'];
             }
@@ -323,17 +338,25 @@ class Auth extends \fast\Auth
         if ($this->breadcrumb || !$path) {
             return $this->breadcrumb;
         }
-        $path_rule_id = 0;
-        foreach ($this->rules as $rule) {
-            $path_rule_id = $rule['name'] == $path ? $rule['id'] : $path_rule_id;
+        $titleArr = [];
+        $menuArr = [];
+        $urlArr = explode('/', $path);
+        foreach ($urlArr as $index => $item) {
+            $pathArr[implode('/', array_slice($urlArr, 0, $index + 1))] = $index;
         }
-        if ($path_rule_id) {
-            $this->breadcrumb = Tree::instance()->init($this->rules)->getParents($path_rule_id, true);
-            foreach ($this->breadcrumb as $k => &$v) {
-                $v['url'] = url($v['name']);
-                $v['title'] = __($v['title']);
+        if (!$this->rules && $this->id) {
+            $this->getRuleList();
+        }
+        foreach ($this->rules as $rule) {
+            if (isset($pathArr[$rule['name']])) {
+                $rule['title'] = __($rule['title']);
+                $rule['url'] = url($rule['name']);
+                $titleArr[$pathArr[$rule['name']]] = $rule['title'];
+                $menuArr[$pathArr[$rule['name']]] = $rule;
             }
         }
+        ksort($menuArr);
+        $this->breadcrumb = $menuArr;
         return $this->breadcrumb;
     }
 
@@ -374,11 +397,26 @@ class Auth extends \fast\Auth
         $refererUrl = Session::get('referer');
         $pinyin = new \Overtrue\Pinyin\Pinyin('Overtrue\Pinyin\MemoryFileDictLoader');
         // 必须将结果集转换为数组
-//        print_r(\app\admin\model\AuthRule::where('status', 'normal')->where('ismenu', 1)->order('weigh', 'desc')->cache("__menu__")->select());
-        $ruleList = (\app\admin\model\AuthRule::where('status', 'normal')->where('ismenu', 1)->order('weigh', 'desc')->cache("__menu__")->select())->toArray();
-
+//        $ruleList = (\app\admin\model\AuthRule::where('status', 'normal')->where('ismenu', 1)->order('weigh', 'desc')->cache("__menu__")->select())->toArray();
+        $ruleList = (\app\admin\model\AuthRule::where('status', 'normal')
+            ->where('ismenu', 1)
+            ->order('weigh', 'desc')
+            ->cache("__menu__")
+            ->select())->toArray();
+        $indexRuleList = \app\admin\model\AuthRule::where('status', 'normal')
+            ->where('ismenu', 0)
+            ->where('name', 'like', '%/index')
+            ->column('name,pid');
+        $pidArr = array_filter(array_unique(array_map(function ($item) {
+            return $item['pid'];
+        }, $ruleList)));
         foreach ($ruleList as $k => &$v) {
             if (!in_array($v['name'], $userRule)) {
+                unset($ruleList[$k]);
+                continue;
+            }
+            $indexRuleName = $v['name'] . '/index';
+            if (isset($indexRuleList[$indexRuleName]) && !in_array($indexRuleName, $userRule)) {
                 unset($ruleList[$k]);
                 continue;
             }
@@ -390,6 +428,14 @@ class Auth extends \fast\Auth
             $v['title'] = __($v['title']);
             $selected = $v['name'] == $fixedPage ? $v : $selected;
             $referer = url($v['url']) == $refererUrl ? $v : $referer;
+        }
+        $lastArr = array_diff($pidArr, array_filter(array_unique(array_map(function ($item) {
+            return $item['pid'];
+        }, $ruleList))));
+        foreach ($ruleList as $index => $item) {
+            if (in_array($item['id'], $lastArr)) {
+                unset($ruleList[$index]);
+            }
         }
         if ($selected == $referer) {
             $referer = [];
@@ -413,18 +459,36 @@ class Auth extends \fast\Auth
                 $selectParentIds = $tree->getParentsIds($select_id, true);
             }
             foreach ($topList as $index => $item) {
-                $childList = Tree::instance()->getTreeMenu($item['id'], '<li class="@class" pid="@pid"><a href="@url@addtabs" addtabs="@id" url="@url" py="@py" pinyin="@pinyin"><i class="@icon"></i> <span>@title</span> <span class="pull-right-container">@caret @badge</span></a> @childlist</li>', $select_id, '', 'ul', 'class="treeview-menu"');
+                $childList = Tree::instance()->getTreeMenu(
+                    $item['id'],
+                    '<li class="@class" pid="@pid"><a href="@url@addtabs" addtabs="@id" url="@url" py="@py" pinyin="@pinyin"><i class="@icon"></i> <span>@title</span> <span class="pull-right-container">@caret @badge</span></a> @childlist</li>',
+                    $select_id,
+                    '',
+                    'ul',
+                    'class="treeview-menu"'
+                );
                 $current = in_array($item['id'], $selectParentIds);
                 $url = $childList ? 'javascript:;' : url($item['url']);
                 $addtabs = $childList || !$url ? "" : (stripos($url, "?") !== false ? "&" : "?") . "ref=addtabs";
-                $childList = str_replace('" pid="' . $item['id'] . '"', ' treeview ' . ($current ? '' : 'hidden') . '" pid="' . $item['id'] . '"', $childList);
+                $childList = str_replace(
+                    '" pid="' . $item['id'] . '"',
+                    ' treeview ' . ($current ? '' : 'hidden') . '" pid="' . $item['id'] . '"',
+                    $childList
+                );
                 $nav .= '<li class="' . ($current ? 'active' : '') . '"><a href="' . $url . $addtabs . '" addtabs="' . $item['id'] . '" url="' . $url . '"><i class="' . $item['icon'] . '"></i> <span>' . $item['title'] . '</span> <span class="pull-right-container"> </span></a> </li>';
                 $menu .= $childList;
             }
         } else {
             // 构造菜单数据
             Tree::instance()->init($ruleList);
-            $menu = Tree::instance()->getTreeMenu(0, '<li class="@class"><a href="@url@addtabs" addtabs="@id" url="@url" py="@py" pinyin="@pinyin"><i class="@icon"></i> <span>@title</span> <span class="pull-right-container">@caret @badge</span></a> @childlist</li>', $select_id, '', 'ul', 'class="treeview-menu"');
+            $menu = Tree::instance()->getTreeMenu(
+                0,
+                '<li class="@class"><a href="@url@addtabs" addtabs="@id" url="@url" py="@py" pinyin="@pinyin"><i class="@icon"></i> <span>@title</span> <span class="pull-right-container">@caret @badge</span></a> @childlist</li>',
+                $select_id,
+                '',
+                'ul',
+                'class="treeview-menu"'
+            );
             if ($selected) {
                 $nav .= '<li role="presentation" id="tab_' . $selected['id'] . '" class="' . ($referer ? '' : 'active') . '"><a href="#con_' . $selected['id'] . '" node-id="' . $selected['id'] . '" aria-controls="' . $selected['id'] . '" role="tab" data-toggle="tab"><i class="' . $selected['icon'] . ' fa-fw"></i> <span>' . $selected['title'] . '</span> </a></li>';
             }

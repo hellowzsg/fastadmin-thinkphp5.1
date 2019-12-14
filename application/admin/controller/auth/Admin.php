@@ -118,15 +118,14 @@ class Admin extends Backend
     public function add()
     {
         if ($this->request->isPost()) {
+            $this->token();
             $params = $this->request->post("row/a");
             if ($params) {
                 $params['salt'] = Random::alnum();
                 $params['password'] = md5(md5($params['password']) . $params['salt']);
                 $params['avatar'] = '/assets/img/avatar.png'; //设置新管理员默认头像。
-//                $result = $this->model->validate('Admin.add')->save($params);
                 $result = $this->validate($params,'app\admin\validate\Admin.add');
                 if (true !== $result) {
-//                    $this->error($this->model->getError());
                     $this->error($result);
                 }
                 $this->model->save($params);
@@ -158,6 +157,7 @@ class Admin extends Backend
         }
 
         if ($this->request->isPost()) {
+            $this->token();
             $params = $this->request->post("row/a");
             if ($params) {
                 if ($params['password']) {
@@ -167,16 +167,7 @@ class Admin extends Backend
                     unset($params['password'], $params['salt']);
                 }
                 //这里需要针对username和email做唯一验证
-<<<<<<< HEAD
-//                $adminValidate = \think\Loader::validate('Admin');
                 $adminValidate = validate('Admin');
-//                $adminValidate = \think\Validate::make([
-//                    'username' => 'require|max:50|unique:admin,username,' . $row->id,
-//                    'email' => 'require|email|unique:admin,email,' . $row->id,
-//                ]);
-=======
-                $adminValidate = validate('Admin');
->>>>>>> 51f46349cd76977f481a6958f6a48bfb07467128
                 $adminValidate->rule([
                     'username' => 'require|max:50|unique:admin,username,' . $row->id,
                     'email' => 'require|email|unique:admin,email,' . $row->id,
@@ -184,14 +175,6 @@ class Admin extends Backend
                 if (!$adminValidate->scene('edit')->check($params)) {
                     $this->error($adminValidate->getError());
                 }
-<<<<<<< HEAD
-//                $validateRes = $this->validate($params,'app\admin\validate\Admin.edit');
-//                if (true !== $validateRes) {
-//                    $this->error($validateRes);
-//                }
-//                $result = $row->validate('Admin.edit')->save($params);
-=======
->>>>>>> 51f46349cd76977f481a6958f6a48bfb07467128
                 $result = $row->save($params);
                 if ($result === false) {
                     $this->error($row->getError());

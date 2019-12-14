@@ -6,6 +6,7 @@ use app\common\controller\Backend;
 use app\common\library\Email;
 use app\common\model\Config as ConfigModel;
 use think\Exception;
+use think\facade\Validate;
 
 /**
  * 系统配置
@@ -70,7 +71,8 @@ class Config extends Backend
     public function add()
     {
         if ($this->request->isPost()) {
-            $params = $this->request->post("row/a");
+            $this->token();
+            $params = $this->request->post("row/a", [], 'trim');
             if ($params) {
                 foreach ($params as $k => &$v) {
                     $v = is_array($v) ? implode(',', $v) : $v;
@@ -105,10 +107,11 @@ class Config extends Backend
      * 编辑
      * @param null $ids
      */
-    public function edit($ids = NULL)
+    public function edit($ids = null)
     {
         if ($this->request->isPost()) {
-            $row = $this->request->post("row/a");
+            $this->token();
+            $row = $this->request->post("row/a", [], 'trim');
             if ($row) {
                 $configList = [];
                 foreach ($this->model->all() as $v) {
@@ -137,9 +140,9 @@ class Config extends Backend
 
     public function del($ids = "")
     {
-        $name = $this->request->request('name');
+        $name = $this->request->post('name');
         $config = ConfigModel::getByName($name);
-        if ($config) {
+        if ($name && $config) {
             try {
                 $config->delete();
                 $this->refreshFile();
@@ -159,13 +162,12 @@ class Config extends Backend
     {
         $config = [];
         foreach ($this->model->all() as $k => $v) {
-
             $value = $v->toArray();
             if (in_array($value['type'], ['selects', 'checkbox', 'images', 'files'])) {
                 $value['value'] = explode(',', $value['value']);
             }
             if ($value['type'] == 'array') {
-                $value['value'] = (array)json_decode($value['value'], TRUE);
+                $value['value'] = (array)json_decode($value['value'], true);
             }
             $config[$value['name']] = $value['value'];
         }
@@ -181,7 +183,6 @@ class Config extends Backend
     {
         $params = $this->request->post("row/a");
         if ($params) {
-
             $config = $this->model->get($params);
             if (!$config) {
                 return $this->success();
@@ -200,18 +201,25 @@ class Config extends Backend
     public function emailtest()
     {
         $row = $this->request->post('row/a');
-        \think\Config::set('site', array_merge(\think\Config::get('site'), $row));
-        $receiver = $this->request->request("receiver");
-        $email = new Email;
-        $result = $email
-            ->to($receiver)
-            ->subject(__("This is a test mail"))
-            ->message('<div style="min-height:550px; padding: 100px 55px 200px;">' . __('This is a test mail content') . '</div>')
-            ->send();
-        if ($result) {
-            $this->success();
+        $receiver = $this->request->post("receiver");
+        if ($receiver) {
+            if (!Validate::is($receiver, "email")) {
+                $this->error(__('Please input correct email'));
+            }
+            \think\facade\Config::set(array_merge(\think\facade\Config::get('site.'), $row), 'site');
+            $email = new Email;
+            $result = $email
+                ->to($receiver)
+                ->subject(__("This is a test mail"))
+                ->message('<div style="min-height:550px; padding: 100px 55px 200px;">' . __('This is a test mail content') . '</div>')
+                ->send();
+            if ($result) {
+                $this->success();
+            } else {
+                $this->error($email->getError());
+            }
         } else {
-            $this->error($email->getError());
+            return $this->error(__('Invalid parameters'));
         }
     }
 

@@ -157,7 +157,7 @@ class Ajax extends Backend
         //操作的数据表
         $table = $this->request->post("table");
         //排序的方式
-        $orderway = $this->request->post("orderway", "", 'strtolower');
+        $orderway = strtolower($this->request->post("orderway", ""));
         $orderway = $orderway == 'asc' ? 'ASC' : 'DESC';
         $sour = $weighdata = [];
         $ids = explode(',', $ids);

@@ -62,6 +62,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
             // 初始化表格
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
+                queryParams: function (params) {
+                    var userinfo = Controller.api.userinfo.get();
+                    $.extend(params, {
+                        uid: userinfo ? userinfo.id : '',
+                        token: userinfo ? userinfo.token : '',
+                        version: Config.fastadmin.version
+                    });
+                    return params;
+                },
                 columns: [
                     [
                         {field: 'id', title: 'ID', operate: false, visible: false},
@@ -144,8 +153,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                 commonSearch: true,
                 searchFormVisible: true,
                 searchFormTemplate: 'searchformtpl',
-                pageSize: 12,
-                pagination: false,
+                pageSize: 50,
             });
 
             // 为表格绑定事件
@@ -433,19 +441,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                 var userinfo = Controller.api.userinfo.get();
                 var uid = userinfo ? userinfo.id : 0;
 
-                if ($(that).data("type") !== 'free') {
-                    if (parseInt(uid) === 0) {
-                        return Layer.alert(__('Not login tips'), {
-                            title: __('Warning'),
-                            btn: [__('Login now'), __('Continue install')],
-                            yes: function (index, layero) {
-                                $(".btn-userinfo").trigger("click");
-                            },
-                            btn2: function () {
-                                install(name, version, false);
-                            }
-                        });
-                    }
+                if (parseInt(uid) === 0) {
+                    return Layer.alert(__('Not login tips'), {
+                        title: __('Warning'),
+                        btn: [__('Login now')],
+                        yes: function (index, layero) {
+                            $(".btn-userinfo").trigger("click");
+                        },
+                        btn2: function () {
+                            install(name, version, false);
+                        }
+                    });
                 }
                 install(name, version, false);
             });
@@ -533,7 +539,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                     return '<a href="javascript:;" data-toggle="tooltip" title="' + __('Click to toggle status') + '" class="btn btn-toggle btn-' + (row.addon.state == 1 ? "disable" : "enable") + '" data-action="' + (row.addon.state == 1 ? "disable" : "enable") + '" data-name="' + row.name + '"><i class="fa ' + (row.addon.state == 0 ? 'fa-toggle-on fa-rotate-180 text-gray' : 'fa-toggle-on text-success') + ' fa-2x"></i></a>';
                 },
                 author: function (value, row, index) {
-                    return '<a href="https://wpa.qq.com/msgrd?v=3&uin=' + row.qq + '&site=fastadmin.net&menu=yes" target="_blank" data-toggle="tooltip" title="' + __('Click to contact developer') + '" class="text-primary">' + value + '</a>';
+                    var url = 'javascript:';
+                    if (typeof row.homepage !== 'undefined') {
+                        url = row.homepage;
+                    } else if (typeof row.qq !== 'undefined') {
+                        url = 'https://wpa.qq.com/msgrd?v=3&uin=' + row.qq + '&site=fastadmin.net&menu=yes';
+                    }
+                    return '<a href="' + url + '" target="_blank" data-toggle="tooltip" title="' + __('Click to contact developer') + '" class="text-primary">' + value + '</a>';
                 },
                 price: function (value, row, index) {
                     if (isNaN(value)) {

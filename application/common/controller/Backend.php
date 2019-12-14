@@ -10,6 +10,7 @@ use think\facade\Hook;
 use think\facade\Lang;
 use think\facade\Session;
 use think\Loader;
+use think\Facade\Validate;
 
 /**
  * 后台控制器基类
@@ -257,7 +258,6 @@ class Backend extends Controller
         $search = $this->request->get("search", '');
         $filter = $this->request->get("filter", '');
         $op = $this->request->get("op", '', 'trim');
-        // $sort = $this->request->get("sort", "id");
         $sort = $this->request->get("sort", !empty($this->model) && $this->model->getPk() ? $this->model->getPk() : 'id');
         $order = $this->request->get("order", "DESC");
         $offset = $this->request->get("offset", 0);
@@ -510,5 +510,21 @@ class Backend extends Controller
         }
         //这里一定要返回有list这个字段,total是可选的,如果total<=list的数量,则会隐藏分页按钮
         return json(['list' => $list, 'total' => $total]);
+    }
+
+    /**
+     * 刷新Token
+     */
+    protected function token()
+    {
+        $token = $this->request->post('__token__');
+
+        //验证Token
+        if (!Validate::is($token, "token", ['__token__' => $token])) {
+            $this->error(__('Token verification error'), '', ['__token__' => $this->request->token()]);
+        }
+
+        //刷新Token
+        $this->request->token();
     }
 }

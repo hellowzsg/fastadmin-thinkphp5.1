@@ -33,6 +33,7 @@ require.config({
         'bootstrap-table-export': '../libs/bootstrap-table/dist/extensions/export/bootstrap-table-export.min',
         'bootstrap-table-mobile': '../libs/bootstrap-table/dist/extensions/mobile/bootstrap-table-mobile',
         'bootstrap-table-lang': '../libs/bootstrap-table/dist/locale/bootstrap-table-zh-CN',
+        'bootstrap-table-jumpto': '../libs/bootstrap-table/dist/extensions/page-jumpto/bootstrap-table-jumpto',
         'bootstrap-slider': '../libs/bootstrap-slider/bootstrap-slider',
         'tableexport': '../libs/tableExport.jquery.plugin/tableExport.min',
         'dragsort': '../libs/fastadmin-dragsort/jquery.dragsort',
@@ -85,6 +86,10 @@ require.config({
         },
         'bootstrap-table-template': {
             deps: ['bootstrap-table', 'template'],
+            exports: '$.fn.bootstrapTable.defaults'
+        },
+        'bootstrap-table-jumpto': {
+            deps: ['bootstrap-table'],
             exports: '$.fn.bootstrapTable.defaults'
         },
         'tableexport': {
@@ -146,7 +151,13 @@ require(['jquery', 'bootstrap'], function ($, undefined) {
                 //加载相应模块
                 if (Config.jsname) {
                     require([Config.jsname], function (Controller) {
-                        Controller[Config.actionname] != undefined && Controller[Config.actionname]();
+                        if (Controller.hasOwnProperty(Config.actionname)) {
+                            Controller[Config.actionname]();
+                        } else {
+                            if (Controller.hasOwnProperty("_empty")) {
+                                Controller._empty();
+                            }
+                        }
                     }, function (e) {
                         console.error(e);
                         // 这里可捕获模块加载的错误

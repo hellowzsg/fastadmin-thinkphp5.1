@@ -34,18 +34,18 @@
                         <p class="help-block"></p>
                     </div>
                 </div>
+
+                {if $captchaType}
                 <div class="form-group">
                     <label class="control-label">{:__('Captcha')}</label>
                     <div class="controls">
-                        <div class="input-group input-group-lg">
-                            <input type="text" name="captcha" class="form-control" placeholder="{:__('Captcha')}" data-rule="required;length(4)" style="border-radius: 0;" />
-                            <span class="input-group-addon" style="padding:0;border:none;">
-                                <img src="{:captcha_src()}" width="140" height="42" onclick="this.src = '{:captcha_src()}?r=' + Math.random();"/>
-                            </span>
+                        <div class="input-group">
+                            {include file="common/captcha" event="register" type="$captchaType" /}
                         </div>
                         <p class="help-block"></p>
                     </div>
                 </div>
+                {/if}
 
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary btn-lg btn-block">{:__('Sign up')}</button>

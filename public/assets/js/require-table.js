@@ -1,4 +1,4 @@
-define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table', 'bootstrap-table-lang', 'bootstrap-table-export', 'bootstrap-table-commonsearch', 'bootstrap-table-template'], function ($, undefined, Moment) {
+define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table', 'bootstrap-table-lang', 'bootstrap-table-export', 'bootstrap-table-commonsearch', 'bootstrap-table-template', 'bootstrap-table-jumpto'], function ($, undefined, Moment) {
     var Table = {
         list: {},
         // Bootstrap-table 基础配置
@@ -27,6 +27,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
             dblClickToEdit: true, //是否启用双击编辑
             singleSelect: false, //是否启用单选
             showRefresh: false,
+            showJumpto: true,
             locale: 'zh-CN',
             showToggle: true,
             showColumns: true,
@@ -72,6 +73,29 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
             destroyallbtn: '.btn-destroyall',
             dragsortfield: 'weigh',
         },
+        button: {
+            edit: {
+                name: 'edit',
+                icon: 'fa fa-pencil',
+                title: __('Edit'),
+                extend: 'data-toggle="tooltip"',
+                classname: 'btn btn-xs btn-success btn-editone'
+            },
+            del: {
+                name: 'del',
+                icon: 'fa fa-trash',
+                title: __('Del'),
+                extend: 'data-toggle="tooltip"',
+                classname: 'btn btn-xs btn-danger btn-delone'
+            },
+            dragsort: {
+                name: 'dragsort',
+                icon: 'fa fa-arrows',
+                title: __('Drag to sort'),
+                extend: 'data-toggle="tooltip"',
+                classname: 'btn btn-xs btn-primary btn-dragsort'
+            }
+        },
         api: {
             init: function (defaults, columnDefaults, locales) {
                 defaults = defaults ? defaults : {};
@@ -101,8 +125,14 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                     },
                     formatCommonChoose: function () {
                         return __('Choose');
+                    },
+                    formatJumpto: function () {
+                        return __('Go');
                     }
                 }, locales);
+                if (typeof defaults.exportTypes != 'undefined') {
+                    $.fn.bootstrapTable.defaults.exportTypes = defaults.exportTypes;
+                }
             },
             // 绑定事件
             bindevent: function (table) {
@@ -118,6 +148,12 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                         return;
                     }
                     Toastr.error(__('Unknown data format'));
+                });
+                //当加载数据成功时
+                table.on('load-success.bs.table', function (e, data) {
+                    if (typeof data.rows === 'undefined' && typeof data.code != 'undefined') {
+                        Toastr.error(data.msg);
+                    }
                 });
                 //当刷新表格时
                 table.on('refresh.bs.table', function (e, settings, data) {
@@ -167,11 +203,16 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                     $(Table.config.disabledbtn, toolbar).toggleClass('disabled', !ids.length);
                 });
                 // 绑定TAB事件
-                $('.panel-heading ul[data-field] li a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-                    var field = $(this).closest("ul").data("field");
+				$('.panel-heading [data-field] a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+					var field = $(this).closest("[data-field]").data("field");
                     var value = $(this).data("value");
-                    $("select[name='" + field + "'] option[value='" + value + "']", table.closest(".bootstrap-table").find(".commonsearch-table")).prop("selected", true);
-                    table.bootstrapTable('refresh', {});
+					var object = $("[name='" + field + "']", table.closest(".bootstrap-table").find(".commonsearch-table"));
+					if (object.prop('tagName') == "SELECT") {
+						$("option[value='" + value + "']", object).prop("selected", true);
+					} else {
+						object.val(value);
+					}
+                    table.bootstrapTable('refresh', {pageNumber: 1});
                     return false;
                 });
                 // 刷新按钮事件
@@ -277,7 +318,8 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                                     pid: pid,
                                     field: Table.config.dragsortfield,
                                     orderway: options.sortOrder,
-                                    table: options.extend.table
+                                    table: options.extend.table,
+                                    pk: options.pk
                                 }
                             };
                             Fast.api.ajax(params, function (data, ret) {
@@ -401,7 +443,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                 image: {
                     'click .img-center': function (e, value, row, index) {
                         var data = [];
-                        value = value.split(",");
+                        value = value.toString().split(",");
                         $.each(value, function (index, value) {
                             data.push({
                                 src: Fast.api.cdnurl(value),
@@ -409,6 +451,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                         });
                         Layer.photos({
                             photos: {
+                                "start": $(this).parent().index(),
                                 "data": data
                             },
                             anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
@@ -429,7 +472,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                 image: function (value, row, index) {
                     value = value ? value : '/assets/img/blank.gif';
                     var classname = typeof this.classname !== 'undefined' ? this.classname : 'img-sm img-center';
-                    return '<a href="javascript:void(0)" target="_blank"><img class="' + classname + '" src="' + Fast.api.cdnurl(value) + '" /></a>';
+                    return '<a href="javascript:"><img class="' + classname + '" src="' + Fast.api.cdnurl(value) + '" /></a>';
                 },
                 images: function (value, row, index) {
                     value = value === null ? '' : value.toString();
@@ -438,9 +481,13 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                     var html = [];
                     $.each(arr, function (i, value) {
                         value = value ? value : '/assets/img/blank.gif';
-                        html.push('<a href="javascript:void(0)" target="_blank"><img class="' + classname + '" src="' + Fast.api.cdnurl(value) + '" /></a>');
+                        html.push('<a href="javascript:"><img class="' + classname + '" src="' + Fast.api.cdnurl(value) + '" /></a>');
                     });
                     return html.join(' ');
+                },
+                content: function (value, row, index) {
+                    var width = this.width != undefined ? this.width : 250;
+                    return "<div style='white-space: nowrap; text-overflow:ellipsis; overflow: hidden; max-width:" + width + "px;'>" + value + "</div>";
                 },
                 status: function (value, row, index) {
                     var custom = {normal: 'success', hidden: 'gray', deleted: 'danger', locked: 'info'};
@@ -480,7 +527,11 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                     var yes = typeof this.yes !== 'undefined' ? this.yes : 1;
                     var no = typeof this.no !== 'undefined' ? this.no : 0;
                     var url = typeof this.url !== 'undefined' ? this.url : '';
-                    return "<a href='javascript:;' data-toggle='tooltip' title='" + __('Click to toggle') + "' class='btn-change' data-id='"
+                    var disable = false;
+                    if (typeof this.disable !== "undefined") {
+                        disable = typeof this.disable === "function" ? this.disable.call(this, value, row, index) : this.disable;
+                    }
+                    return "<a href='javascript:;' data-toggle='tooltip' title='" + __('Click to toggle') + "' class='btn-change " + (disable ? 'btn disabled' : '') + "' data-id='"
                         + row.id + "' " + (url ? "data-url='" + url + "'" : "") + " data-params='" + this.field + "=" + (value == yes ? no : yes) + "'><i class='fa fa-toggle-on " + (value == yes ? 'text-' + color : 'fa-flip-horizontal text-gray') + " fa-2x'></i></a>";
                 },
                 url: function (value, row, index) {
@@ -560,32 +611,14 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                         names.push(item.name);
                     });
                     if (options.extend.dragsort_url !== '' && names.indexOf('dragsort') === -1) {
-                        buttons.push({
-                            name: 'dragsort',
-                            icon: 'fa fa-arrows',
-                            title: __('Drag to sort'),
-                            extend: 'data-toggle="tooltip"',
-                            classname: 'btn btn-xs btn-primary btn-dragsort'
-                        });
+                        buttons.push(Table.button.dragsort);
                     }
                     if (options.extend.edit_url !== '' && names.indexOf('edit') === -1) {
-                        buttons.push({
-                            name: 'edit',
-                            icon: 'fa fa-pencil',
-                            title: __('Edit'),
-                            extend: 'data-toggle="tooltip"',
-                            classname: 'btn btn-xs btn-success btn-editone',
-                            url: options.extend.edit_url
-                        });
+                        Table.button.edit.url = options.extend.edit_url;
+                        buttons.push(Table.button.edit);
                     }
                     if (options.extend.del_url !== '' && names.indexOf('del') === -1) {
-                        buttons.push({
-                            name: 'del',
-                            icon: 'fa fa-trash',
-                            title: __('Del'),
-                            extend: 'data-toggle="tooltip"',
-                            classname: 'btn btn-xs btn-danger btn-delone'
-                        });
+                        buttons.push(Table.button.del);
                     }
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                 }
@@ -633,7 +666,8 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                         text = typeof j.text === 'function' ? j.text.call(table, row, j) : j.text ? j.text : '';
                         title = typeof j.title === 'function' ? j.title.call(table, row, j) : j.title ? j.title : text;
                         refresh = j.refresh ? 'data-refresh="' + j.refresh + '"' : '';
-                        confirm = j.confirm ? 'data-confirm="' + j.confirm + '"' : '';
+                        confirm = typeof j.confirm === 'function' ? j.confirm.call(table, row, j) : (typeof j.confirm !== 'undefined' ? j.confirm : false);
+                        confirm = confirm ? 'data-confirm="' + confirm + '"' : '';
                         extend = j.extend ? j.extend : '';
                         disable = typeof j.disable === 'function' ? j.disable.call(table, row, j) : (typeof j.disable !== 'undefined' ? j.disable : false);
                         if (disable) {

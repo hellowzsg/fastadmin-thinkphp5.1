@@ -25,6 +25,9 @@ class Addon extends Backend
     public function initialize()
     {
         parent::initialize();
+		if (!$this->auth->isSuperAdmin() && in_array($this->request->action(), ['install', 'uninstall', 'local', 'upgrade'])) {
+            $this->error(__('Access is allowed only to the super management group'));
+        }
     }
 
     /**
@@ -45,11 +48,11 @@ class Addon extends Backend
     /**
      * 配置
      */
-    public function config($ids = null)
+    public function config($name = null)
     {
-        $name = $this->request->get("name");
+        $name = $name ? $name : $this->request->get("name");
         if (!$name) {
-            $this->error(__('Parameter %s can not be empty', $ids ? 'id' : 'name'));
+            $this->error(__('Parameter %s can not be empty', 'name'));
         }
 		if (!preg_match("/^[a-zA-Z0-9]+$/", $name)) {
 		    $this->error(__('Addon name incorrect'));
@@ -63,7 +66,7 @@ class Addon extends Backend
             $this->error(__('No Results were found'));
         }
         if ($this->request->isPost()) {
-            $params = $this->request->post("row/a");
+            $params = $this->request->post("row/a", [], 'trim');
             if ($params) {
                 foreach ($config as $k => &$v) {
                     if (isset($params[$v['name']])) {
@@ -207,6 +210,7 @@ class Addon extends Backend
             Log::debug('tmpFile path:' . $tmpFile);
             try {
                 Service::unzip($tmpName);
+                unset($info);
                 @unlink($tmpFile);
                 $infoFile = $tmpAddonDir . 'info.ini';
                 if (!is_file($infoFile)) {
@@ -260,6 +264,7 @@ class Addon extends Backend
                     throw new Exception(__($e->getMessage()));
                 }
             } catch (Exception $e) {
+                unset($info);
                 @unlink($tmpFile);
                 @rmdirs($tmpAddonDir);
                 $this->error(__($e->getMessage()));

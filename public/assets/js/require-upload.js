@@ -9,8 +9,8 @@ define(['jquery', 'bootstrap', 'plupload', 'template'], function ($, undefined, 
             events: {
                 onInit: function (up) {
                     //修复少数安卓浏览器无法上传图片的Bug
-                    var input = $("input[type=file]", $(up.settings.button).next());
-                    if (input && input.prop("accept") && input.prop("accept").match(/image\/jpeg/)) {
+                    var input = $("input[type=file]", up.settings.container);
+                    if (input && input.prop("accept") && input.prop("accept").match(/image\//)) {
                         input.prop("accept", "image/jpg," + input.prop("accept"));
                     }
                 },
@@ -214,6 +214,7 @@ define(['jquery', 'bootstrap', 'plupload', 'template'], function ($, undefined, 
                             url: url,
                             multipart_params: $.isArray(multipart) ? {} : multipart,
                             init: {
+                                Init: Upload.events.onInit,
                                 PostInit: Upload.events.onPostInit,
                                 FilesAdded: Upload.events.onFileAdded,
                                 BeforeUpload: Upload.events.onBeforeUpload,
@@ -260,17 +261,49 @@ define(['jquery', 'bootstrap', 'plupload', 'template'], function ($, undefined, 
                                 });
                             });
                         }
+                        //刷新隐藏textarea的值
+                        var refresh = function (name) {
+                            var data = {};
+                            var textarea = $("textarea[name='" + name + "']");
+                            var container = textarea.prev("ul");
+                            $.each($("input,select,textarea", container).serializeArray(), function (i, j) {
+                                var reg = /\[?(\w+)\]?\[(\w+)\]$/g;
+                                var match = reg.exec(j.name);
+                                if (!match)
+                                    return true;
+                                if (!isNaN(match[2])) {
+                                    data[i] = j.value;
+                                } else {
+                                    match[1] = "x" + parseInt(match[1]);
+                                    if (typeof data[match[1]] === 'undefined') {
+                                        data[match[1]] = {};
+                                    }
+                                    data[match[1]][match[2]] = j.value;
+                                }
+                            });
+                            var result = [];
+                            $.each(data, function (i, j) {
+                                result.push(j);
+                            });
+                            textarea.val(JSON.stringify(result));
+                        };
                         if (preview_id && input_id) {
-                            $(document.body).on("keyup change", "#" + input_id, function () {
+                            $(document.body).on("keyup change", "#" + input_id, function (e) {
                                 var inputStr = $("#" + input_id).val();
                                 var inputArr = inputStr.split(/\,/);
                                 $("#" + preview_id).empty();
                                 var tpl = $("#" + preview_id).data("template") ? $("#" + preview_id).data("template") : "";
+                                var extend = $("#" + preview_id).next().is("textarea") ? $("#" + preview_id).next("textarea").val() : "{}";
+                                var json = {};
+                                try {
+                                    json = JSON.parse(extend);
+                                } catch (e) {
+                                }
                                 $.each(inputArr, function (i, j) {
                                     if (!j) {
                                         return true;
                                     }
-                                    var data = {url: j, fullurl: Fast.api.cdnurl(j), data: $(that).data()};
+                                    var data = {url: j, fullurl: Fast.api.cdnurl(j), data: $(that).data(), key: i, index: i, value: (json && typeof json[i] !== 'undefined' ? json[i] : null)};
                                     var html = tpl ? Template(tpl, data) : Template.render(Upload.config.previewtpl, data);
                                     $("#" + preview_id).append(html);
                                 });
@@ -278,15 +311,20 @@ define(['jquery', 'bootstrap', 'plupload', 'template'], function ($, undefined, 
                             $("#" + input_id).trigger("change");
                         }
                         if (preview_id) {
+                            //监听文本框改变事件
+                            $("#" + preview_id).on('change keyup', "input,textarea,select", function () {
+                                refresh($(this).closest("ul").data("name"));
+                            });
                             // 监听事件
                             $(document.body).on("fa.preview.change", "#" + preview_id, function () {
-                                var urlArr = new Array();
+                                var urlArr = [];
                                 $("#" + preview_id + " [data-url]").each(function (i, j) {
                                     urlArr.push($(this).data("url"));
                                 });
                                 if (input_id) {
                                     $("#" + input_id).val(urlArr.join(","));
                                 }
+                                refresh($("#" + preview_id).data("name"));
                             });
                             // 移除按钮事件
                             $(document.body).on("click", "#" + preview_id + " .btn-trash", function () {

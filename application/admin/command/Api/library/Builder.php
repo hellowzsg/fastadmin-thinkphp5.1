@@ -171,6 +171,11 @@ class Builder
             $sectorArr[$sector] = isset($allClassAnnotation['ApiWeigh']) ? $allClassAnnotation['ApiWeigh'][0] : 0;
         }
         arsort($sectorArr);
+        $routes = include_once Env::get('config_path') . 'route.php';
+        $subdomain = false;
+        if (config('url_domain_deploy') && isset($routes['__domain__']) && isset($routes['__domain__']['api']) && $routes['__domain__']['api']) {
+            $subdomain = true;
+        }
         $counter = 0;
         $section = null;
         $weigh = 0;
@@ -185,12 +190,16 @@ class Builder
                 if (0 === count($docs)) {
                     continue;
                 }
+                $route = is_array($docs['ApiRoute'][0]) ? $docs['ApiRoute'][0]['data'] : $docs['ApiRoute'][0];
+                if ($subdomain) {
+                    $route = substr($route, 4);
+                }
                 $docslist[$section][$name] = [
                     'id'                => $counter,
                     'method'            => is_array($docs['ApiMethod'][0]) ? $docs['ApiMethod'][0]['data'] : $docs['ApiMethod'][0],
                     'method_label'      => $this->generateBadgeForMethod($docs),
                     'section'           => $section,
-                    'route'             => is_array($docs['ApiRoute'][0]) ? $docs['ApiRoute'][0]['data'] : $docs['ApiRoute'][0],
+                    'route'             => $route,
                     'title'             => is_array($docs['ApiTitle'][0]) ? $docs['ApiTitle'][0]['data'] : $docs['ApiTitle'][0],
                     'summary'           => is_array($docs['ApiSummary'][0]) ? $docs['ApiSummary'][0]['data'] : $docs['ApiSummary'][0],
                     'body'              => isset($docs['ApiBody'][0]) ? is_array($docs['ApiBody'][0]) ? $docs['ApiBody'][0]['data'] : $docs['ApiBody'][0] : '',

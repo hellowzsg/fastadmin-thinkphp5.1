@@ -12,6 +12,7 @@ use think\Loader;
 use think\facade\Request;
 use think\Request as R;
 use think\facade\Response;
+use think\facade\Route;
 
 /**
  * API控制器基类
@@ -92,7 +93,25 @@ class Api
      */
     protected function initialize()
     {
-        //移除HTML标签todo
+        if (Config::get('url_domain_deploy')) {
+            $domain = Route::rules('domain');
+            if (isset($domain['api'])) {
+                if (isset($_SERVER['HTTP_ORIGIN'])) {
+                    header("Access-Control-Allow-Origin: " . Request::server('HTTP_ORIGIN'));
+                    header('Access-Control-Allow-Credentials: true');
+                    header('Access-Control-Max-Age: 86400');
+                }
+                if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+                    if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])) {
+                        header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+                    }
+                    if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'])) {
+                        header("Access-Control-Allow-Headers: {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
+                    }
+                }
+            }
+        }
+        //移除HTML标签
 //        $this->request->filtfilter('trim,strip_tags,htmlspecialchars');
         Request::filter(['trim','strip_tags','htmlspecialchars']);
 
@@ -141,9 +160,6 @@ class Api
         $upload = (array)$upload;
         
         Config::set(array_merge(Config::get('upload.'), $upload), 'upload');
-        // $upload_conf = Config::get('upload');
-        // $upload_conf = is_array($upload_conf)? $upload_conf: [];
-        // Config::set('upload', array_merge($upload_conf, $upload));
 
         // 加载当前控制器语言包
         $this->loadlang($controllername);
