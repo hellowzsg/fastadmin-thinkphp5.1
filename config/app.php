@@ -78,7 +78,7 @@ return [
     // 操作方法后缀
     'action_suffix' => '',
     // 自动搜索控制器
-    'controller_auto_search' => false,
+    'controller_auto_search' => true,
 
     // +----------------------------------------------------------------------
     // | URL设置
@@ -156,8 +156,6 @@ return [
     'show_error_msg' => false,
     // 异常处理handle类 留空使用 \think\exception\Handle
     'exception_handle' => '',
-    // 自动搜索控制器
-    'controller_auto_search' => true,
     // +----------------------------------------------------------------------
     // | 分页配置
     // +----------------------------------------------------------------------
