@@ -17,5 +17,4 @@ class AuthGroup extends Model
     {
         return __($value);
     }
-
 }

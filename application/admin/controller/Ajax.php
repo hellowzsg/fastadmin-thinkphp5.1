@@ -216,13 +216,13 @@ class Ajax extends Backend
                 if ($type == 'content') {
                     break;
                 }
-
+            //
             case 'template':
                 rmdirs(App::getRuntimePath() . 'temp/', false);
                 if ($type == 'template') {
                     break;
                 }
-
+            //
             case 'addons':
                 Service::refresh();
                 if ($type == 'addons') {
@@ -287,5 +287,4 @@ class Ajax extends Backend
         }
         $this->success('', null, $provincelist);
     }
-
 }

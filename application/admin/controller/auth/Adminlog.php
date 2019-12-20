@@ -131,5 +131,4 @@ class Adminlog extends Backend
     {
         return parent::selectpage();
     }
-
 }

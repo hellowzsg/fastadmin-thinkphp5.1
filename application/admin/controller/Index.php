@@ -118,10 +118,4 @@ class Index extends Backend
         Hook::listen("admin_logout_after", $this->request);
         $this->success(__('Logout successful'), 'index/login');
     }
-
-    public function xxoo (){
-       $xx = Loader::parseName("example");
-       dump($xx);
-    }
-
 }

@@ -51,7 +51,7 @@ class Install extends Command
 
         // 先尝试能否自动创建数据库
         $config = Config::pull('database');
-        $pdo = new PDO("{$config['type']}:host={$hostname}" . ($hostport ? ";port={$hostport}" : ''), $username, $password,[
+        $pdo = new PDO("{$config['type']}:host={$hostname}" . ($hostport ? ";port={$hostport}" : ''), $username, $password, [
             PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
             PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"
         ]);

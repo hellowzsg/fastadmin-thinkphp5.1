@@ -79,5 +79,4 @@ class Rule extends Backend
         }
         $this->error();
     }
-
 }

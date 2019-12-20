@@ -125,7 +125,7 @@ class Group extends Backend
      */
     public function edit($ids = null)
     {
-		if (!in_array($ids, $this->childrenGroupIds)) {
+        if (!in_array($ids, $this->childrenGroupIds)) {
             $this->error(__('You have no permission'));
         }
         $row = $this->model->get(['id' => $ids]);
@@ -139,8 +139,8 @@ class Group extends Backend
             if (!in_array($params['pid'], $this->childrenGroupIds)) {
                 $this->error(__('The parent group exceeds permission limit'));
             }
-			// 父节点不能是它自身的子节点或自己本身
-            if (in_array($params['pid'], Tree::instance()->getChildrenIds($row->id,true))){
+            // 父节点不能是它自身的子节点或自己本身
+            if (in_array($params['pid'], Tree::instance()->getChildrenIds($row->id, true))) {
                 $this->error(__('The parent group can not be its own child or itself'));
             }
             $params['rules'] = explode(',', $params['rules']);
@@ -163,16 +163,16 @@ class Group extends Backend
                 Db::startTrans();
                 try {
                     $row->save($params);
-                    $children_auth_groups = model("AuthGroup")->all(['id'=>['in',implode(',',(Tree::instance()->getChildrenIds($row->id)))]]);
+                    $children_auth_groups = model("AuthGroup")->all(['id'=>['in',implode(',', (Tree::instance()->getChildrenIds($row->id)))]]);
                     $childparams = [];
-                    foreach ($children_auth_groups as $key=>$children_auth_group) {
+                    foreach ($children_auth_groups as $key => $children_auth_group) {
                         $childparams[$key]['id'] = $children_auth_group->id;
                         $childparams[$key]['rules'] = implode(',', array_intersect(explode(',', $children_auth_group->rules), $rules));
                     }
                     model("AuthGroup")->saveAll($childparams);
                     Db::commit();
                     $this->success();
-                }catch (Exception $e){
+                } catch (Exception $e) {
                     Db::rollback();
                     $this->error($e->getMessage());
                 }

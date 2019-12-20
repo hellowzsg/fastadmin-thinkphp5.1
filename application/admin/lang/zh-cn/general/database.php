@@ -40,4 +40,3 @@ return [
     'Optimize table %s fail'                                                 => '优化表[%s]失败',
     'Repair table %s fail'                                                   => '修复表[%s]失败'
 ];
-

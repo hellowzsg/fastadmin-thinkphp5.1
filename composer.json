@@ -24,7 +24,8 @@
     "phpmailer/phpmailer": "^5.2",
     "zhusg/thinkphp51-addons": "dev-master",
     "overtrue/pinyin": "~3.0",
-    "phpoffice/phpspreadsheet": "^1.2"
+    "phpoffice/phpspreadsheet": "^1.2",
+    "topthink/think-testing": "^2.0"
   },
   "config": {
     "preferred-install": "dist"
@@ -40,7 +41,7 @@
   "repositories": {
     "packagist": {
       "type": "composer",
-      "url": "https://packagist.phpcomposer.com"
+      "url": "https://mirrors.aliyun.com/composer/"
     }
   }
 }

@@ -37,5 +37,4 @@ class Ajax extends Frontend
     {
         return action('api/common/upload');
     }
-
 }

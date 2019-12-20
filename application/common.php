@@ -162,12 +162,7 @@ if (!function_exists('copydirs')) {
         if (!is_dir($dest)) {
             mkdir($dest, 0755, true);
         }
-        foreach (
-            $iterator = new RecursiveIteratorIterator(
-                new RecursiveDirectoryIterator($source, RecursiveDirectoryIterator::SKIP_DOTS),
-                RecursiveIteratorIterator::SELF_FIRST
-            ) as $item
-        ) {
+        foreach ($iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($source, RecursiveDirectoryIterator::SKIP_DOTS), RecursiveIteratorIterator::SELF_FIRST) as $item) {
             if ($item->isDir()) {
                 $sontDir = $dest . DS . $iterator->getSubPathName();
                 if (!is_dir($sontDir)) {

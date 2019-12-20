@@ -47,5 +47,5 @@ class Admin extends Validate
         ];
         parent::__construct($rules, $message, $field);
     }
-
 }
+

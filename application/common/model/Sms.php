@@ -18,5 +18,4 @@ class Sms Extends Model
     // 追加属性
     protected $append = [
     ];
-
 }

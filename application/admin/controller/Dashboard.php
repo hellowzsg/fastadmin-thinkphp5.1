@@ -21,8 +21,7 @@ class Dashboard extends Backend
     {
         $seventtime = \fast\Date::unixtime('day', -7);
         $paylist = $createlist = [];
-        for ($i = 0; $i < 7; $i++)
-        {
+        for ($i = 0; $i < 7; $i++) {
             $day = date("Y-m-d", $seventtime + ($i * 86400));
             $createlist[$day] = mt_rand(20, 200);
             $paylist[$day] = mt_rand(1, mt_rand(1, $createlist[$day]));
@@ -52,5 +51,4 @@ class Dashboard extends Backend
 
         return $this->view->fetch();
     }
-
 }

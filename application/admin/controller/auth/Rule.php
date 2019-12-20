@@ -26,7 +26,7 @@ class Rule extends Backend
     public function initialize()
     {
         parent::initialize();
-		if (!$this->auth->isSuperAdmin()){
+        if (!$this->auth->isSuperAdmin()) {
             $this->error(__('Access is allowed only to the super management group'));
         }
         $this->model = model('AuthRule');
@@ -79,7 +79,7 @@ class Rule extends Backend
                     $this->error(__('The non-menu rule must have parent'));
                 }
 //                $result = $this->model->validate()->save($params);
-                $result = $this->validate($params,'app\admin\validate\AuthRule');
+                $result = $this->validate($params, 'app\admin\validate\AuthRule');
                 if ($result !== true) {
 //                    $this->error($this->model->getError());
                     $this->error($result);
@@ -124,10 +124,6 @@ class Rule extends Backend
                 if (!$ruleValidate->check($params)) {
                     $this->error($ruleValidate->getError());
                 }
-//                $result = $row->validate()->save($params);
-//                if ($result === false) {
-//                    $this->error($row->getError());
-//                }
                 $result = $row->save($params);
                 if (false === $result) {
                     $this->error($row->getError());

@@ -69,5 +69,4 @@ class Demo extends Api
     {
         $this->success('返回成功', ['action' => 'test3']);
     }
-
 }

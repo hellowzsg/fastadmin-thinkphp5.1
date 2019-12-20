@@ -114,5 +114,4 @@ class Attachment extends Backend
         }
         $this->error(__('Parameter %s can not be empty', 'ids'));
     }
-
 }

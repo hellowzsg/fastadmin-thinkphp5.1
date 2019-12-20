@@ -33,5 +33,4 @@ class ExceptionHandle extends Handle
         //其它此交由系统处理
         return parent::render($e);
     }
-
 }

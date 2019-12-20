@@ -50,8 +50,8 @@ class Config extends Backend
             if (in_array($value['type'], ['select', 'selects', 'checkbox', 'radio'])) {
                 $value['value'] = explode(',', $value['value']);
             }
-            $value['content'] = json_decode($value['content'], TRUE);
-			$value['tip'] = htmlspecialchars($value['tip']);
+            $value['content'] = json_decode($value['content'], true);
+            $value['tip'] = htmlspecialchars($value['tip']);
             $siteList[$v['group']]['list'][] = $value;
         }
         $index = 0;
@@ -222,5 +222,4 @@ class Config extends Backend
             return $this->error(__('Invalid parameters'));
         }
     }
-
 }

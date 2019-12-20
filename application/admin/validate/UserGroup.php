@@ -23,5 +23,4 @@ class UserGroup extends Validate
         'add'  => [],
         'edit' => [],
     ];
-    
 }

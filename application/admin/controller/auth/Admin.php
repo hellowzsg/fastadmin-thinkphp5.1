@@ -124,7 +124,7 @@ class Admin extends Backend
                 $params['salt'] = Random::alnum();
                 $params['password'] = md5(md5($params['password']) . $params['salt']);
                 $params['avatar'] = '/assets/img/avatar.png'; //设置新管理员默认头像。
-                $result = $this->validate($params,'app\admin\validate\Admin.add');
+                $result = $this->validate($params, 'app\admin\validate\Admin.add');
                 if (true !== $result) {
                     $this->error($result);
                 }
@@ -254,5 +254,4 @@ class Admin extends Backend
         $this->dataLimitField = 'id';
         return parent::selectpage();
     }
-
 }

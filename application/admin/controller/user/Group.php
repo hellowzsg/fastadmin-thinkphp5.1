@@ -43,5 +43,4 @@ class Group extends Backend
         $this->assign("nodeList", $nodeList);
         return parent::edit($ids);
     }
-
 }

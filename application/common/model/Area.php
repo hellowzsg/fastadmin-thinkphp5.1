@@ -84,5 +84,4 @@ class Area extends Model
         $districtdata = self::getAreaFromLngLat($lng, $lat, 3);
         return $districtdata;
     }
-
 }

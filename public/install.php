@@ -23,15 +23,15 @@ define('INSTALL_PATH', APP_PATH . 'admin' . DS . 'command' . DS . 'Install' . DS
 // 判断文件或目录是否有写的权限
 function is_really_writable($file)
 {
-    if (DIRECTORY_SEPARATOR == '/' AND @ ini_get("safe_mode") == FALSE) {
+    if (DIRECTORY_SEPARATOR == '/' and @ ini_get("safe_mode") == false) {
         return is_writable($file);
     }
-    if (!is_file($file) OR ($fp = @fopen($file, "r+")) === FALSE) {
-        return FALSE;
+    if (!is_file($file) or ($fp = @fopen($file, "r+")) === false) {
+        return false;
     }
 
     fclose($fp);
-    return TRUE;
+    return true;
 }
 
 $sitename = "FastAdmin";
@@ -341,7 +341,7 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
         <!--<p><?php echo $sitename; ?>还支持在命令行php think install一键安装</p>-->
 
         <form method="post">
-            <?php if ($errInfo): ?>
+            <?php if ($errInfo) : ?>
                 <div class="error">
                     <?php echo $errInfo; ?>
                 </div>

@@ -2,15 +2,12 @@
 
 return array (
   'autoload' => false,
-  'hooks' => 
-  array (
-    'testhook' => 
-    array (
+  'hooks' => array (
+    'testhook' => array (
       0 => 'test',
     ),
   ),
-  'route' => 
-  array (
+  'route' => array (
     '/example$' => 'example/index/index',
     '/example/d/[:name]' => 'example/demo/index',
     '/example/d1/[:name]' => 'example/demo/demo1',

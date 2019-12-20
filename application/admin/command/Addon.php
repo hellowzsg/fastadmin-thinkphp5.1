@@ -82,7 +82,7 @@ class Addon extends Command
                         $createTableSql = $result[0]['Create Table'];
                     }
                 } catch (PDOException $e) {
-
+                    //nothing
                 }
 
                 $data = [
@@ -239,7 +239,8 @@ class Addon extends Command
                 $zip->open($addonFile, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
 
                 $files = new \RecursiveIteratorIterator(
-                    new \RecursiveDirectoryIterator($addonDir), \RecursiveIteratorIterator::LEAVES_ONLY
+                    new \RecursiveDirectoryIterator($addonDir),
+                    \RecursiveIteratorIterator::LEAVES_ONLY
                 );
 
                 foreach ($files as $name => $file) {
@@ -319,5 +320,4 @@ class Addon extends Command
     {
         return __DIR__ . '/Addon/stubs/' . $name . '.stub';
     }
-
 }

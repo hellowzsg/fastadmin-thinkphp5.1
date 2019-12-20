@@ -162,5 +162,4 @@ class Config extends Model
         ];
         return $upload;
     }
-
 }

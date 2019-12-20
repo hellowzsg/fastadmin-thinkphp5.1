@@ -23,5 +23,4 @@ class UserRule extends Validate
         'add'  => [],
         'edit' => [],
     ];
-    
 }

@@ -21,5 +21,4 @@ class Index extends Frontend
         $newslist = [];
         return jsonp(['newslist' => $newslist, 'new' => count($newslist), 'url' => 'https://www.fastadmin.net?ref=news']);
     }
-
 }

@@ -48,5 +48,5 @@ class AuthRule extends Validate
         $this->message['name.format'] = __('Name only supports letters, numbers, underscore and slash');
         parent::__construct($rules, $message, $field);
     }
-
 }
+

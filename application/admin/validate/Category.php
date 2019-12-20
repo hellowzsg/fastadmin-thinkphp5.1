@@ -23,5 +23,5 @@ class Category extends Validate
         'add'  => [],
         'edit' => [],
     ];
-    
 }
+

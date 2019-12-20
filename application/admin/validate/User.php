@@ -23,5 +23,5 @@ class User extends Validate
         'add'  => [],
         'edit' => [],
     ];
-    
 }
+
