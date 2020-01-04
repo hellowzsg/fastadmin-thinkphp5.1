@@ -110,7 +110,7 @@ class Rule extends Backend
                     $this->error(__('The non-menu rule must have parent'));
                 }
                 if ($params['pid'] != $row['pid']) {
-                    $childrenIds = Tree::instance()->init(collection(AuthRule::select())->toArray())->getChildrenIds($row['id']);
+                    $childrenIds = Tree::instance()->init(AuthRule::select()->toArray())->getChildrenIds($row['id']);
                     if (in_array($params['pid'], $childrenIds)) {
                         $this->error(__('Can not change the parent to child'));
                     }
