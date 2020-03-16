@@ -1,4 +1,4 @@
-**FastAdmin 完全升级 thinkphp5.1**  
+# **FastAdmin 完全升级 thinkphp5.1**  
 fastadmin： 1.0.0.20190418_beta  
 thinkphp: 5.1.38 LTS
 
@@ -26,8 +26,7 @@ Less (可选,用于编辑less文件,如果你需要增改css样式,最好安装�
 3. 下载PHP依赖包  
 `composer install`
 4. 添加虚拟主机并绑定到fastadmin/public目录
-5. 访问地址，在线安装
-5. 访问主机地址即可在线安装
+5. 访问主机地址即可在线安装(或者使用命令`php think install ..`)
 6. 点个star呗~~
 ## **升级日志**  
 [日志](https://github.com/hellowzsg/fastadmin-thinkphp5.1/blob/master/UPGRADE.md)
