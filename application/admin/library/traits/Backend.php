@@ -11,6 +11,7 @@ use PhpOffice\PhpSpreadsheet\Reader\Csv;
 use think\Db;
 use think\exception\PDOException;
 use think\exception\ValidateException;
+use think\facade\Env;
 
 trait Backend
 {
@@ -392,8 +393,8 @@ trait Backend
         //导入文件首行类型,默认是注释,如果需要使用字段名称请使用name
         $importHeadType = isset($this->importHeadType) ? $this->importHeadType : 'comment';
 
-        $table = $this->model->getQuery()->getTable();
-        $database = \think\Config::get('database.database');
+        $table = $this->model->db()->getTable();
+        $database = \think\facade\Config::get('database.database');
         $fieldArr = [];
         $list = db()->query("SELECT COLUMN_NAME,COLUMN_COMMENT FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = ? AND TABLE_SCHEMA = ?", [$table, $database]);
         foreach ($list as $k => $v) {
