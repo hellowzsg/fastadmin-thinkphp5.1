@@ -53,7 +53,7 @@ class Install extends Command
         $config = Config::pull('database');
         $pdo = new PDO("{$config['type']}:host={$hostname}" . ($hostport ? ";port={$hostport}" : ''), $username, $password, [
             PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"
+            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES {$config['charset']}"
         ]);
         //$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         //检测是否支持innodb存储引擎
